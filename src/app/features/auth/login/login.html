@@ -1,6 +1,91 @@
-<h2>Login</h2>
-<form (ngSubmit)="onLogin()">
-  <input [(ngModel)]="email" name="email" placeholder="Email" required>
-  <input [(ngModel)]="password" name="password" type="password" placeholder="Password" required>
-  <button type="submit">Login</button>
-</form>
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light-custom dark:bg-dark-custom">
+  <div class="w-100" style="max-width: 420px;">
+    <div class="card shadow-lg rounded-3 border-0 p-4">
+      <div class="text-center mb-4">
+        <h1 class="h3 fw-bold text-primary">Welcome Back</h1>
+        <p class="text-muted small">Log in to PKP-ALLIANCE SOCIETY</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="email" class="form-label visually-hidden">Email address</label>
+          <input
+            type="email"
+            id="email"
+            class="form-control py-2"
+            placeholder="Email address"
+            formControlName="email"
+          />
+
+          @if (email?.touched && email?.invalid) {
+            <div class="text-danger small mt-1">
+              @if (email?.errors?.['required']) {
+                <div>Email is required.</div>
+              } @else if (email?.errors?.['email']) {
+                <div>Enter a valid email address.</div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+          <label for="password" class="form-label visually-hidden">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control py-2"
+            placeholder="Password"
+            formControlName="password"
+          />
+
+          @if (password?.touched && password?.invalid) {
+            <div class="text-danger small mt-1">
+              @if (password?.errors?.['required']) {
+                <div>Password is required.</div>
+              } @else if (password?.errors?.['minlength']) {
+                <div>Password must be at least 6 characters.</div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Submit -->
+        <div class="d-grid mb-3">
+          <button
+            type="submit"
+            class="btn btn-primary-custom py-2 fw-medium"
+            [disabled]="loginForm.invalid"
+          >
+            Log In
+          </button>
+        </div>
+      </form>
+
+      <!-- Divider -->
+      <div class="d-flex align-items-center my-3">
+        <div class="flex-grow-1 border-top"></div>
+        <span class="mx-2 small text-muted">Or continue with</span>
+        <div class="flex-grow-1 border-top"></div>
+      </div>
+
+      <!-- Google Login -->
+      <div class="d-grid mb-3">
+        <button class="btn btn-outline-secondary d-flex align-items-center justify-content-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512" width="20" height="20" class="me-2">
+            <!-- Path omitted for brevity -->
+          </svg>
+          Log In with Google
+        </button>
+      </div>
+
+      <!-- Link to signup -->
+      <div class="text-center">
+        <a [routerLink]="'/auth/register'" class="text-primary fw-medium">
+          Don’t have an account? Sign up
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

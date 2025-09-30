@@ -1,47 +1,157 @@
-<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light font-display">
-  <div class="card shadow-lg p-4 rounded-xl" style="max-width: 420px; width: 100%;">
+<div
+  class="d-flex align-items-center justify-content-center min-vh-100 bg-light-custom dark:bg-dark-custom"
+>
+  <div
+    class="w-100"
+    style="max-width: 420px; background: var(--bs-body-bg); border-radius: 0.75rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 2rem;"
+  >
+    <!-- Header -->
     <div class="text-center mb-4">
       <h1 class="h3 fw-bold text-primary">Create Your Account</h1>
       <p class="text-muted">Join PKP-ALLIANCE SOCIETY today!</p>
     </div>
 
-    <form #signupForm="ngForm" (ngSubmit)="onSubmit(signupForm)">
+    <!-- Signup Form -->
+    <form [formGroup]="signupForm" (ngSubmit)="onRegister(signupForm)">
+      <!-- Full Name -->
       <div class="mb-3">
-        <input type="text" class="form-control form-control-custom" name="fullName" placeholder="Full Name" required ngModel>
+        <input
+          type="text"
+          id="fullName"
+          class="form-control py-2"
+          placeholder="Full Name"
+          formControlName="fullName"
+        />
+        @if (fullName?.touched && fullName?.invalid) {
+          <div class="text-danger small mt-1">
+            @if (fullName?.errors?.['required']) {
+              <div>Full Name is required.</div>
+            } @else if (fullName?.errors?.['minlength']) {
+              <div>Full Name must be at least 3 characters.</div>
+            }
+          </div>
+        }
       </div>
+
+      <!-- Email -->
       <div class="mb-3">
-        <input type="email" class="form-control form-control-custom" name="email" placeholder="Email address" required ngModel>
+        <input
+          type="email"
+          id="email"
+          class="form-control py-2"
+          placeholder="Email address"
+          formControlName="email"
+        />
+        @if (email?.touched && email?.invalid) {
+          <div class="text-danger small mt-1">
+            @if (email?.errors?.['required']) {
+              <div>Email is required.</div>
+            } @else if (email?.errors?.['email']) {
+              <div>Please enter a valid email address.</div>
+            }
+          </div>
+        }
       </div>
+
+      <!-- Password -->
       <div class="mb-3">
-        <input type="password" class="form-control form-control-custom" name="password" placeholder="Password" required ngModel>
+        <div class="input-group">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            class="form-control py-2"
+            placeholder="Password"
+            formControlName="password"
+          />
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="togglePasswordVisibility('password')"
+          >
+            @if (showPassword) {
+              <i class="bi bi-eye-slash"></i>
+            } @else {
+              <i class="bi bi-eye"></i>
+            }
+          </button>
+        </div>
+        @if (password?.touched && password?.invalid) {
+          <div class="text-danger small mt-1">
+            @if (password?.errors?.['required']) {
+              <div>Password is required.</div>
+            } @else if (password?.errors?.['minlength']) {
+              <div>Password must be at least 6 characters.</div>
+            }
+          </div>
+        }
       </div>
-      <div class="mb-3">
-        <input type="password" class="form-control form-control-custom" name="confirmPassword" placeholder="Confirm Password" required ngModel>
+
+      <!-- Confirm Password -->
+      <div class="mb-4">
+        <div class="input-group">
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmPassword"
+            class="form-control py-2"
+            placeholder="Confirm Password"
+            formControlName="confirmPassword"
+          />
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="togglePasswordVisibility('confirm')"
+          >
+            @if (showConfirmPassword) {
+              <i class="bi bi-eye-slash"></i>
+            } @else {
+              <i class="bi bi-eye"></i>
+            }
+          </button>
+        </div>
+        @if (confirmPassword?.touched && confirmPassword?.invalid) {
+          <div class="text-danger small mt-1">
+            @if (confirmPassword?.errors?.['required']) {
+              <div>Confirm Password is required.</div>
+            } @else if (confirmPassword?.errors?.['mismatch']) {
+              <div>Passwords do not match.</div>
+            }
+          </div>
+        }
       </div>
-      <button type="submit" class="btn btn-primary-custom w-100 py-2 fw-medium">Sign Up</button>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn btn-primary-custom w-100 py-2 fw-medium"
+      >
+        Sign Up
+      </button>
     </form>
 
-    <div class="form-divider my-4 text-muted">Or continue with</div>
+    <!-- Divider -->
+    <div class="my-4 position-relative text-center">
+      <hr />
+      <span
+        class="position-absolute top-50 start-50 translate-middle px-2 bg-white text-muted small"
+      >
+        Or continue with
+      </span>
+    </div>
 
-    <button type="button" class="btn btn-google w-100 d-flex align-items-center justify-content-center py-2">
-      <svg class="me-2" width="20" height="20" viewBox="0 0 488 512" xmlns="http://www.w3.org/2000/svg">
-        <path fill="currentColor"
-              d="M488 261.8C488 403.3 381.5 512 244 512
-                 110.3 512 0 401.7 0 261.8
-                 0 122.4 110.3 11.8 244 11.8
-                 c70.3 0 129.5 27.8 175.4 73.4
-                 l-61.9 61.9C333.7 127.2 291.5 103.5
-                 244 103.5c-74.6 0-135.2 60.6-135.2
-                 135.2s60.6 135.2 135.2 135.2
-                 c87.3 0 112-65.7 114.9-99.9H244
-                 v-75.1h236.1c2.4 12.9 3.9 26.4
-                 3.9 40.8z"/>
-      </svg>
+    <!-- Google Button -->
+    <button
+      type="button"
+      class="btn w-100 d-flex align-items-center justify-content-center border mb-3"
+    >
+      <i class="bi bi-google me-2"></i>
       Sign Up with Google
     </button>
 
-    <div class="text-center mt-4">
-      <a href="#" class="link-primary-custom fw-medium">Already have an account? Log in</a>
+    <!-- Login Link -->
+    <div class="text-center mt-3">
+      <a [routerLink]="'/auth/login'" class="text-primary fw-medium">
+        Already have an account? Log in
+      </a>
     </div>
   </div>
 </div>
