@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
+import {LandingPage} from './features/landing-page/landing-page';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'auth/login', pathMatch: 'full' }, // optional: open to login by default
+  { path: '', component: LandingPage },
   {
     path: 'auth',
     children: [
