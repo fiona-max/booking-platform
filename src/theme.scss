@@ -7,14 +7,13 @@
   --gold: #FFD700;
   --dark-gray: #333333;
   --white: #ffffff;
-
   --form-bg: var(--background-light);
   --form-border: #ccc;
   --form-text: #000000;
 }
 
 /* ====== Dark Theme ====== */
-body.dark {
+body.dark-mode {
   --primary: #0494a4;
   --primary-hover: #037a88;
   --background-light: #0f2123; /* swaps */
@@ -22,12 +21,13 @@ body.dark {
   --form-bg: #1c2e30;
   --form-border: #333333;
   --form-text: #ffffff;
+  --gold: #FFD700;
 }
 
 /* ====== Utilities ====== */
 body {
   background-color: var(--background-light);
-  color: var(--form-text);
+  //color: var(--form-text);
 }
 
 /* Colors */
@@ -65,6 +65,9 @@ body {
   background-color: var(--form-bg);
   color: var(--form-text);
   border: 1px solid var(--form-border);
+}
+.text-custom-dark{
+  color: var(--form-text);
 }
 
 /* Links */
