@@ -22,13 +22,6 @@ export class NavbarComponent implements OnInit {
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
     document.body.classList.toggle('dark-mode', this.isDarkMode);
-    // this.dark = !this.dark;
-    // const root = document.documentElement;
-    // if (this.dark) {
-    //   root.classList.add('dark-mode');
-    // } else {
-    //   root.classList.remove('dark-mode');
-    // }
   }
 
 }
