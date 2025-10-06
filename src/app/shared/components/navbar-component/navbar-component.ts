@@ -1,27 +1,34 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
+import {RouterLink} from '@angular/router';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-navbar-component',
-  imports: [],
+  imports: [
+    RouterLink,
+    NgOptimizedImage
+  ],
   templateUrl: './navbar-component.html',
   styleUrl: './navbar-component.scss'
 })
 export class NavbarComponent implements OnInit {
 
-  dark = false;
+  isDarkMode = false;
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
   ngOnInit(): void {
   }
 
   toggleTheme() {
-    this.dark = !this.dark;
-    const root = document.documentElement;
-    if (this.dark) {
-      root.classList.add('dark-mode');
-    } else {
-      root.classList.remove('dark-mode');
-    }
+    this.isDarkMode = !this.isDarkMode;
+    document.body.classList.toggle('dark-mode', this.isDarkMode);
+    // this.dark = !this.dark;
+    // const root = document.documentElement;
+    // if (this.dark) {
+    //   root.classList.add('dark-mode');
+    // } else {
+    //   root.classList.remove('dark-mode');
+    // }
   }
 
 }
