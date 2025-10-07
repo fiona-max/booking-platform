@@ -1,0 +1,159 @@
+<app-navbar-component></app-navbar-component>
+<div
+  class="d-flex align-items-center justify-content-center min-vh-100 bg-light-custom dark:bg-dark-custom"
+>
+  <div
+    class="w-100"
+    style="max-width: 420px; background: var(--bs-body-bg); border-radius: 0.75rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 2rem;"
+  >
+    <!-- Header -->
+    <div class="text-center mb-4">
+      <h1 class="h3 fw-bold text-primary">Create Your Account</h1>
+      <p class="text-muted">Join PKP-ALLIANCE SOCIETY today!</p>
+    </div>
+
+    <!-- Signup Form -->
+    <form [formGroup]="signupForm" (ngSubmit)="onRegister(signupForm)">
+      <!-- Full Name -->
+      <div class="mb-3">
+        <input
+          type="text"
+          id="fullName"
+          class="form-control py-2"
+          placeholder="Full Name"
+          formControlName="fullName"
+        />
+        @if (fullName?.touched && fullName?.invalid) {
+          <div class="text-danger small mt-1">
+            @if (fullName?.errors?.['required']) {
+              <div>Full Name is required.</div>
+            } @else if (fullName?.errors?.['minlength']) {
+              <div>Full Name must be at least 3 characters.</div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <input
+          type="email"
+          id="email"
+          class="form-control py-2"
+          placeholder="Email address"
+          formControlName="email"
+        />
+        @if (email?.touched && email?.invalid) {
+          <div class="text-danger small mt-1">
+            @if (email?.errors?.['required']) {
+              <div>Email is required.</div>
+            } @else if (email?.errors?.['email']) {
+              <div>Please enter a valid email address.</div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <div class="input-group">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            class="form-control py-2"
+            placeholder="Password"
+            formControlName="password"
+          />
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="togglePasswordVisibility('password')"
+          >
+            @if (showPassword) {
+              <i class="bi bi-eye-slash"></i>
+            } @else {
+              <i class="bi bi-eye"></i>
+            }
+          </button>
+        </div>
+        @if (password?.touched && password?.invalid) {
+          <div class="text-danger small mt-1">
+            @if (password?.errors?.['required']) {
+              <div>Password is required.</div>
+            } @else if (password?.errors?.['minlength']) {
+              <div>Password must be at least 6 characters.</div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="mb-4">
+        <div class="input-group">
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmPassword"
+            class="form-control py-2"
+            placeholder="Confirm Password"
+            formControlName="confirmPassword"
+          />
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="togglePasswordVisibility('confirm')"
+          >
+            @if (showConfirmPassword) {
+              <i class="bi bi-eye-slash"></i>
+            } @else {
+              <i class="bi bi-eye"></i>
+            }
+          </button>
+        </div>
+        @if (confirmPassword?.touched && confirmPassword?.invalid) {
+          <div class="text-danger small mt-1">
+            @if (confirmPassword?.errors?.['required']) {
+              <div>Confirm Password is required.</div>
+            } @else if (confirmPassword?.errors?.['mismatch']) {
+              <div>Passwords do not match.</div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn btn-primary-custom w-100 py-2 fw-medium"
+      >
+        Sign Up
+      </button>
+    </form>
+
+    <!-- Divider -->
+    <div class="my-4 position-relative text-center">
+      <hr />
+      <span
+        class="position-absolute top-50 start-50 translate-middle px-2 bg-white text-muted small"
+      >
+        Or continue with
+      </span>
+    </div>
+
+    <!-- Google Button -->
+    <button
+      [disabled]="signupForm.invalid"
+      type="button"
+      class="btn w-100 d-flex align-items-center justify-content-center border mb-3"
+    >
+      <i class="bi bi-google me-2"></i>
+      Sign Up with Google
+    </button>
+
+    <!-- Login Link -->
+    <div class="text-center mt-3">
+      <a [routerLink]="'/auth/login'" class="text-primary fw-medium">
+        Already have an account? Log in
+      </a>
+    </div>
+  </div>
+</div>

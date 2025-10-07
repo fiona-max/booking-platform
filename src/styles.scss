@@ -1,2 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
 
+body.dark-mode {
+  --bs-body-bg: #121212;
+  --bs-body-color: #f8f9fa;
+  --bs-primary: #0494a4;
+  --bs-secondary: #6c757d;
+  --bs-border-color: #333;
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+/* small utility tweaks from original design */
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+
+.card-hero {
+  background-size: cover;
+  background-position: center;
+}
+
