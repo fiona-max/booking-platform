@@ -42,7 +42,9 @@ body {
   border-radius: 0.5rem;
   color: var(--white) !important;
 }
-
+.btn-fade-primary{
+  background-color: rgba(5, 189, 209, 0.2);
+}
 .btn-primary-custom:hover {
   background-color: var(--primary-hover) !important;
   border-color: var(--primary-hover) !important;

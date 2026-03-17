@@ -1,2 +1,97 @@
 <app-navbar-component></app-navbar-component>
+<main>
+  <section class="py-5 text-center bg-dark text-white" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuD2SGLlrun8riu4delUewMf091VMJrSnxhvk8EzsY8-CqMc5wsd5FrBRbY_p90xwD-x0E5D-sUcypaVbbaBvc7Nz0QVgkNa5d2lCpdqGo24HcmSdyaDvA5zuq6jSWgZFteq7AuhFDzXqlmjh70rf6iD4r6J7s6mBqFBd_2r43zBL1W8x-kSJqnTvaEOjTGgrKGaTvrUw8R-WG_DBm6-Npi_l3irikR2Ra-6uwPi1oRNaHIgTQ2BVpIIS7uAsugk3jS2Yim0GdZxobo'); background-size:cover; background-position:center;">
+    <div class="container py-5">
+      <h1 class="display-5 fw-bold">Explore the world with PKP-ALLIANCE SOCIETY</h1>
+      <p class="lead mb-4">Find your perfect getaway with our curated travel packages and exclusive deals.</p>
+      <!-- Search Form -->
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="bg-white text-dark p-4 rounded shadow-lg">
+        <div class="row g-3 align-items-end">
+          <!-- Origin & Destination -->
+          <div class="col-md-3">
+            <label for="origin" class="form-label">Origin</label>
+            <input type="text" id="origin" formControlName="origin" class="form-control" placeholder="e.g. New York">
+          </div>
+          <div class="col-md-3">
+            <label for="destination" class="form-label">Destination</label>
+            <input type="text" id="destination" formControlName="destination" class="form-control" placeholder="e.g. Paris">
+          </div>
+
+          <!-- Departure & Return Dates -->
+          <div class="col-md-2">
+            <label for="departure" class="form-label">Departure</label>
+            <input type="date" id="departure" formControlName="departure" class="form-control">
+          </div>
+          <div class="col-md-2">
+            <label for="returnDate" class="form-label">Return</label>
+            <input type="date" id="returnDate" formControlName="returnDate" class="form-control">
+          </div>
+
+          <!-- Adults & Children -->
+          <div class="col-md-1">
+            <label for="adults" class="form-label">Adults</label>
+            <input type="number" id="adults" formControlName="adults" min="1" class="form-control" placeholder="2">
+          </div>
+          <div class="col-md-1">
+            <label for="children" class="form-label">Children</label>
+            <input type="number" id="children" formControlName="children" min="0" class="form-control" placeholder="0">
+          </div>
+
+          <!-- Travel Class -->
+          <div class="col-md-2">
+            <label for="travelClass" class="form-label">Class</label>
+            <select id="travelClass" formControlName="travelClass" class="form-select">
+              <option value="Economy">Economy</option>
+              <option value="Business">Business</option>
+              <option value="First Class">First Class</option>
+            </select>
+          </div>
+
+          <!-- Max Price & Currency -->
+          <div class="col-md-2">
+            <label for="maxPrice" class="form-label">Max Price</label>
+            <div class="input-group">
+              <input type="number" id="maxPrice" formControlName="maxPrice" min="0" class="form-control" placeholder="1000">
+              <select formControlName="currency" class="form-select">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Search Button -->
+          <div class="col-12 text-center mt-3">
+            <button type="submit" class="btn btn-primary-custom btn-lg px-5">Search</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+  <section class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Featured Destinations</h2>
+      <div class="row g-4">
+        @for (dest of destinations; track dest) {
+          <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+              <img [src]="dest.image" class="card-img-top" [alt]="dest.name">
+              <div class="card-body text-center">
+                <h5 class="card-title">{{dest.name}}</h5>
+                <p class="card-text">{{dest.description}}</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+  <section class="py-5 text-center btn-fade-primary">
+    <div class="container">
+      <h2 class="mb-3">Ready to book your next adventure?</h2>
+      <p class="mb-4">Join PKP-ALLIANCE SOCIETY today and start planning your dream vacation.</p>
+      <button class="btn btn-primary-custom btn-lg">Explore More</button>
+    </div>
+  </section>
+</main>
 <app-footer-component></app-footer-component>
