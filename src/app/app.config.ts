@@ -14,6 +14,43 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
+import {
+  LucideAngularModule,
+  Bell,
+  User,
+  TriangleAlert,
+  CheckCircle,
+  Clock,
+  Plane,
+  Car,
+  ArrowRight,
+  Sliders,
+  Layers,
+  Check,
+  Zap,
+  ChevronDown,
+  DollarSign,
+  CreditCard,
+  ShieldCheck,
+  Receipt,
+  Eye,
+  EyeOff,
+  Facebook,
+  Instagram,
+  Music,
+  ShieldAlert,
+  Ticket,
+  CircleCheck,
+  Briefcase,
+  Wifi,
+  PlaneLanding,
+  PlaneTakeoff,
+  Star,
+  Info,
+  MapPin,
+  Mail,
+  ShieldCheck as ShieldCheckLucide
+} from 'lucide-angular';
 
 // ✅ Factory for translation JSON files
 export function HttpLoaderFactory(http: HttpClient) {
@@ -41,6 +78,45 @@ export const appConfig: ApplicationConfig = {
 
     // ✅ Firebase
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth())
+    provideAuth(() => getAuth()),
+
+    // ✅ Lucide Icons
+    importProvidersFrom(
+      LucideAngularModule.pick({
+        Bell,
+        User,
+        TriangleAlert,
+        CheckCircle,
+        Clock,
+        Plane,
+        Car,
+        ArrowRight,
+        Sliders,
+        Layers,
+        Check,
+        Zap,
+        ChevronDown,
+        DollarSign,
+        CreditCard,
+        ShieldCheck: ShieldCheckLucide,
+        Receipt,
+        Eye,
+        EyeOff,
+        Facebook,
+        Instagram,
+        Music,
+        ShieldAlert,
+        Ticket,
+        CircleCheck,
+        Briefcase,
+        Wifi,
+        PlaneLanding,
+        PlaneTakeoff,
+        Star,
+        Info,
+        MapPin,
+        Mail
+      })
+    )
   ],
 };

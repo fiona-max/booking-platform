@@ -2,10 +2,12 @@ import { Component, signal } from '@angular/core';
 import {RouterModule, RouterOutlet} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
+import {NavbarComponent} from './shared/components/navbar-component/navbar-component';
+import {FooterComponent} from './shared/components/footer-component/footer-component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterModule, CommonModule],
+  imports: [RouterOutlet, RouterModule, CommonModule, NavbarComponent, FooterComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

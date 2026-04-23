@@ -7,5 +7,8 @@ import { Component } from '@angular/core';
   styleUrl: './footer.scss'
 })
 export class Footer {
+  protected address: string = "";
+  protected phone: string = "";
+  protected currentYear: string = "";
 
 }

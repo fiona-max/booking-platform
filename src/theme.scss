@@ -10,6 +10,7 @@
   --form-bg: var(--background-light);
   --form-border: #ccc;
   --form-text: #000000;
+  --secondary: #735c00;
 }
 
 /* ====== Dark Theme ====== */
@@ -22,6 +23,7 @@ body.dark-mode {
   --form-border: #333333;
   --form-text: #ffffff;
   --gold: #FFD700;
+
 }
 
 /* ====== Utilities ====== */
@@ -30,10 +32,12 @@ body {
 }
 
 /* Colors */
-.text-primary { color: var(--primary) !important; }
+.text-primary-custom { color: var(--primary) !important; }
 .bg-primary-custom { background-color: var(--primary) !important; }
 .bg-light-custom { background-color: var(--background-light) !important; }
 .bg-dark-custom { background-color: var(--background-dark) !important; }
+.text-secondary-custom { color: var(--secondary) !important; }
+.bg-secondary-custom { background-color: var(--secondary) !important; }
 
 /* Buttons */
 .btn-primary-custom {
