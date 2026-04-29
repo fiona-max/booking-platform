@@ -1,2 +1,297 @@
-<app-navbar-component></app-navbar-component>
-<app-footer-component></app-footer-component>
+<!-- Hero & Search Section -->
+<section
+  class="relative h-[auto] py-20 bg-cover bg-center flex items-center justify-center text-center"
+  style='background-image: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuD2SGLlrun8riu4delUewMf091VMJrSnxhvk8EzsY8-CqMc5wsd5FrBRbY_p90xwD-x0E5D-sUcypaVbbaBvc7Nz0QVgkNa5d2lCpdqGo24HcmSdyaDvA5zuq6jSWgZFteq7AuhFDzXqlmjh70rf6iD4r6J7s6mBqFBd_2r43zBL1W8x-kSJqnTvaEOjTGgrKGaTvrUw8R-WG_DBm6-Npi_l3irikR2Ra-6uwPi1oRNaHIgTQ2BVpIIS7uAsugk3jS2Yim0GdZxobo");'
+>
+
+  <div class="container mx-auto px-6 text-text-dark">
+
+    <h2 class="text-5xl font-extrabold mb-4 drop-shadow-lg">
+      {{ 'LANDING.HERO_TITLE' | translate }}
+    </h2>
+
+    <p class="text-lg mb-8 max-w-2xl mx-auto text-text-light">
+      {{ 'LANDING.HERO_SUBTITLE' | translate }}
+    </p>
+
+    <!-- FORM -->
+    <form [formGroup]="flightsForm" (ngSubmit)="submit()"
+          class="max-w-5xl mx-auto bg-white/80 backdrop-blur-md rounded-xl p-8 shadow-soft">
+
+      <!-- Trip Type Toggle -->
+      <div class="flex justify-start mb-6">
+        <div class="relative">
+          <select formControlName="tripType"
+                  class="bg-transparent text-primary-custom font-bold text-sm border-none focus:ring-0 cursor-pointer appearance-none pr-8">
+            <option value="Round Trip">{{ 'LANDING.TRIP_TYPE_ROUND_TRIP' | translate }}</option>
+            <option value="One Way">{{ 'LANDING.TRIP_TYPE_ONE_WAY' | translate }}</option>
+          </select>
+          <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+            <lucide-icon name="chevron-down" class="w-4 h-4 text-primary-custom"></lucide-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Fields -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Origin -->
+        <div class="relative">
+          <label class="absolute -top-3 left-3 bg-white px-1 text-xs text-text-light">{{ 'LANDING.ORIGIN' | translate }}</label>
+          <input formControlName="origin"
+                 class="w-full h-12 px-4 rounded-lg bg-white/90 border border-gray-200 focus:ring-2 focus:ring-primary"
+                 placeholder="e.g. New York" (input)="onOriginChange($event)"/>
+
+          <!-- Origin Suggestions -->
+          @if (originSuggestions().length > 0) {
+            <div class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+              @for (loc of originSuggestions(); track loc.iataCode) {
+                <div (click)="selectLocation(loc, 'origin')"
+                     class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b last:border-0 border-gray-100 transition-colors text-left">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-primary-custom">{{ loc.iataCode }}</span>
+                    <span class="text-xs px-2 py-1 bg-gray-100 rounded text-gray-600 uppercase">{{ loc.subType }}</span>
+                  </div>
+                  <div class="text-sm font-medium text-gray-800">{{ loc.name }}</div>
+                  <div class="text-xs text-gray-500 truncate">{{ loc.address.cityName }}, {{ loc.address.countryName }}</div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Destination -->
+        <div class="relative">
+          <label class="absolute -top-3 left-3 bg-white px-1 text-xs text-text-light">{{ 'LANDING.DESTINATION' | translate }}</label>
+          <input formControlName="destination"
+                 class="w-full h-12 px-4 rounded-lg bg-white/90 border border-gray-200 focus:ring-2 focus:ring-primary"
+                 placeholder="e.g. Paris" (input)="onDestinationChange($event)"/>
+
+          <!-- Destination Suggestions -->
+          @if (destinationSuggestions().length > 0) {
+            <div class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+              @for (loc of destinationSuggestions(); track loc.iataCode) {
+                <div (click)="selectLocation(loc, 'destination')"
+                     class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b last:border-0 border-gray-100 transition-colors text-left">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-primary-custom">{{ loc.iataCode }}</span>
+                    <span class="text-xs px-2 py-1 bg-gray-100 rounded text-gray-600 uppercase">{{ loc.subType }}</span>
+                  </div>
+                  <div class="text-sm font-medium text-gray-800">{{ loc.name }}</div>
+                  <div class="text-xs text-gray-500 truncate">{{ loc.address.cityName }}, {{ loc.address.countryName }}</div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Adults -->
+        <div class="relative">
+          <label class="absolute -top-3 left-3 bg-white px-1 text-xs text-text-light">{{ 'LANDING.ADULTS' | translate }}</label>
+          <input type="number" min="1" formControlName="adults"
+                 class="w-full h-12 px-4 rounded-lg bg-white/90 border border-gray-200 focus:ring-2 focus:ring-primary"/>
+        </div>
+
+        <!-- Departure -->
+        <div class="relative">
+          <label class="absolute -top-3 left-3 bg-white px-1 text-xs text-text-light">{{ 'LANDING.DEPARTURE_DATE' | translate }}</label>
+          <input type="date" formControlName="departureDate"
+                 class="w-full h-12 px-4 rounded-lg bg-white/90 border border-gray-200 focus:ring-2 focus:ring-primary"
+                 [class.border-red-500]="flightsForm.get('departureDate')?.invalid && flightsForm.get('departureDate')?.touched"/>
+          @if (flightsForm.get('departureDate')?.hasError('pastDate') && flightsForm.get('departureDate')?.touched) {
+            <span class="text-xs text-red-500 mt-1">{{ 'LANDING.ERROR_PAST_DATE' | translate }}</span>
+          }
+        </div>
+
+      </div>
+
+      <!-- Advanced -->
+      <details class="mt-6 ">
+        <summary class="text-sm text-center font-medium text-primary-custom cursor-pointer text-left">
+          {{ 'LANDING.ADVANCED_SEARCHES' | translate }}
+        </summary>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mt-4">
+
+          @if (flightsForm.get('tripType')?.value === 'Round Trip') {
+            <div class="relative">
+              <label class="absolute -top-3 left-3 bg-white px-1 text-xs text-text-light">{{ 'LANDING.RETURN_DATE' | translate }}</label>
+              <input type="date" formControlName="returnDate"
+                     class="w-full h-12 px-4 rounded-lg bg-white/90 border border-gray-200 focus:ring-2 focus:ring-primary"
+                     [class.border-red-500]="(flightsForm.get('returnDate')?.invalid || flightsForm.hasError('invalidRange')) && flightsForm.get('returnDate')?.touched"/>
+              @if (flightsForm.hasError('invalidRange') && flightsForm.get('returnDate')?.touched) {
+                <span class="text-xs text-red-500 mt-1">{{ 'LANDING.ERROR_INVALID_RANGE' | translate }}</span>
+              }
+            </div>
+          }
+
+          <div class="relative">
+            <label class="absolute -top-3 left-3 bg-white px-1 text-xs text-text-light">{{ 'LANDING.CHILDREN' | translate }}</label>
+            <input type="number" min="0" formControlName="children"
+                   class="w-full h-12 px-4 rounded-lg bg-white/90 border border-gray-200 focus:ring-2 focus:ring-primary"/>
+          </div>
+
+          <div class="relative">
+            <label class="absolute -top-3 left-3 bg-white px-1 text-xs text-text-light">{{ 'LANDING.TRAVEL_CLASS' | translate }}</label>
+            <select formControlName="travelClass"
+                    class="w-full h-12 px-4 rounded-lg bg-white/90 border border-gray-200 focus:ring-2 focus:ring-primary">
+              <option value="Economy">{{ 'LANDING.ECONOMY' | translate }}</option>
+              <option value="Business">{{ 'LANDING.BUSINESS' | translate }}</option>
+              <option value="First Class">{{ 'LANDING.FIRST_CLASS' | translate }}</option>
+            </select>
+          </div>
+
+          <div class="relative">
+            <label class="absolute -top-3 left-3 bg-white px-1 text-xs text-text-light">{{ 'LANDING.MAX_PRICE' | translate }}</label>
+            <input type="number" formControlName="maxPrice"
+                   class="w-full h-12 px-4 rounded-lg bg-white/90 border border-gray-200 focus:ring-2 focus:ring-primary"/>
+          </div>
+
+          <div class="relative">
+            <label class="absolute -top-3 left-3 bg-white px-1 text-xs text-text-light">{{ 'LANDING.CURRENCY' | translate }}</label>
+            <select formControlName="currency"
+                    class="w-full h-12 px-4 rounded-lg bg-white/90 border border-gray-200 focus:ring-2 focus:ring-primary">
+              <option>USD</option>
+              <option>EUR</option>
+              <option>GBP</option>
+            </select>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- Submit -->
+      <div class="mt-8 flex flex-col items-center gap-4">
+        @if (error()) {
+          <div class="text-red-500 text-sm font-medium">
+            {{ error() }}
+          </div>
+        }
+        <button type="submit"
+                [disabled]="loading()"
+                class="px-12 py-3 bg-primary-custom text-white rounded-5 font-bold shadow-soft hover:bg-opacity-90 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+          @if (loading()) {
+            <span class="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+          }
+          <span>{{ loading() ? ('LANDING.SEARCHING' | translate) : ('LANDING.SEARCH_FLIGHTS' | translate) }}</span>
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+</section>
+<section class="py-16 bg-gray-50">
+  <div class="container mx-auto px-6">
+    <h3 class="text-3xl font-bold mb-8 text-center text-text-dark">{{ 'LANDING.FEATURED_DESTINATIONS' | translate }}</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="bg-white rounded-xl overflow-hidden shadow-soft hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+        <div class="h-56 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBjO_Q62EpuS5mbvttvBph2n0wl06AsTfG28x18wu83LwCf3Z9zdDVLnotH6uCIyXEykD0vno5CjjIejxb0DzFtDcyGCgFelGoITjSMKWRN-MW_bZ3xgaQ5kL5R9QjHIxA-rL3Zn_V0RL5j2v9NN7KHn_NE6tcvlSHkTiT1zVTHBJIF1NRyjftsFgENmYcXuYSvYbZc0EOdr8XvmYh_Jmwymh-MWrl4sgcx72PEbt30xr8GbGoN0NxG-SDs5KvV_wXtKNmUo9TKXVA");'></div>
+        <div class="p-6">
+          <h4 class="text-xl font-bold text-text-dark">Paris</h4>
+          <p class="text-text-light mt-2">{{ 'LANDING.PARIS_DESC' | translate }}</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl overflow-hidden shadow-soft hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+        <div class="h-56 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBBaF5qCQceNv0obD2G6PqrdPLGR598jLnAoVRrDrqdtQi_QEGdsole1s5R82VJk5PgaKDhDcCBBAxOU8MMKEBZlI2AXYiiRft9OnFu6qn2j69zGivDjtixmVpa2uDNGvAVFk3SIRNlip_1iAi_Xk5N25knFJkRPAD78h8J3-rcMv2b47WTe_cZFZlMPu2gwiv9CT6g6auE1_p8vuIPSouYyF7lci-BZCN8ZhMLZgJ9hShTcqBu-d_MSia8w6G3hNkqljCn4CWsg4g");'></div>
+        <div class="p-6">
+          <h4 class="text-xl font-bold text-text-dark">Tokyo</h4>
+          <p class="text-text-light mt-2">{{ 'LANDING.TOKYO_DESC' | translate }}</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl overflow-hidden shadow-soft hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+        <div class="h-56 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAI9dLMCNAyePhdU_l465qk9ASb0BfhOGXY_i1CNh5VH1nUu2LTPp4Xc0YFAhFFIbIM9N_actTWTMEM2Yi6DrFjPDQ4SVUEJ1IIdfZcZ97L9_S3gKU5g4r1ebP30bKz78Js4kIXpWLBiIH1uU_etGQw5qxlIAExRw1M6r3etoQr3YBMTiEMArMUCZnHF1zjkvzxIFEwn2g1h6-rVhLZKiA-4toogHHiA6-g18umJR1abVNUOzDq8hc1o71SY0eJp9YYlYxrcN12nKs");'></div>
+        <div class="p-6">
+          <h4 class="text-xl font-bold text-text-dark">New York</h4>
+          <p class="text-text-light mt-2">{{ 'LANDING.NY_DESC' | translate }}</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl overflow-hidden shadow-soft hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+        <div class="h-56 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuALV_mGyviUojRo_E0JiKTKi-xZAoSx5SGAIe8kxe0ol7nR2_gwcLXXoQEIc-sebUnmfehFjn9kWZZZ2iHyEyWXl0mnCIF8i-EDw0vtVAtoJRc2DAm7DUbuDjyAl3KtfzQZdV79TcqHiJMRcWu5SXcX-nkIwtBkHN7wMs-aqR7xeUA0Z6GVFFxbmp9_tcJY4YirOsAIKsSYeitT-_ZCdvC3utwUuDhb_vV_dj-eqgecqrLebTvknLqMegs-c1pz1q_unk0HbBGdGRc");'></div>
+        <div class="p-6">
+          <h4 class="text-xl font-bold text-text-dark">London</h4>
+          <p class="text-text-light mt-2">{{ 'LANDING.LONDON_DESC' | translate }}</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl overflow-hidden shadow-soft hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+        <div class="h-56 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDnhp9Xwi7SaOxR4k53JO1z7zSRIYivQ7uYqLDxedHZHWjz-07eqrEo7KRPqnR3bd64lU2PRabtb3g4_tE0xHlc741sZKzzMYjPnfSKE8pmG4uwApSjD-MN6dTQXSUn1y1SWlyvhF5Q8UrTdBiqcB6P7eUdgLjMOlPxw65umB7rSMJf0F_WXh3zYXfwJNuSRjK7MlQbDOKYtav1_ZNhtCBFccg7ncYCoN075CbeXKzt0u6V9BjxaGXUmQLSCrpHqG2R-QdNLb8NjOw");'></div>
+        <div class="p-6">
+          <h4 class="text-xl font-bold text-text-dark">Rome</h4>
+          <p class="text-text-light mt-2">{{ 'LANDING.ROME_DESC' | translate }}</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl overflow-hidden shadow-soft hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1">
+        <div class="h-56 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBk0i-zkYN65FJ9Iz4hnv35JuSB-c4l9scKbdsku0XnmR0vgT_9YoT4taQLbnu_9eIndVI1Tt5FnInfLfHqMBOy8oFHIyYUgpXHIt9AUho1QRjwD59CfEG3qgsuKEU3ayfFz2UCRI_p_mZ66NXDZ4pzu4Ila36yPxSc981-lXVOeFtxsONWKd_zOl3OnCi0Ae0EiR58HuwBd5Q36gJyYlcT1ItpmarsdZhcSYT-mG__ncu1-LP7psSF781uYoGi4WglO8_cn38zsOw");'></div>
+        <div class="p-6">
+          <h4 class="text-xl font-bold text-text-dark">Sydney</h4>
+          <p class="text-text-light mt-2">{{ 'LANDING.SYDNEY_DESC' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="py-20 bg-white">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <h2 class="font-serif text-3xl md:text-4xl text-secondary-custom mb-1">
+        {{ 'LANDING.ADVANTAGE_TITLE' | translate }}
+      </h2>
+      <div class="w-20 h-1 bg-brandGold mx-auto rounded-full"></div>
+    </div>
+
+    <!-- Features -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+
+      <div *ngFor="let feature of features"
+           class="text-center group p-6 rounded-2xl hover:bg-gray-50 transition-colors duration-300">
+
+        <!-- Icon -->
+        <div class="w-16 h-16 mx-auto mb-6 bg-teal-50 text-primary-custom rounded-2xl flex items-center justify-center
+                    group-hover:scale-110 transition-transform">
+
+          <!-- Shield -->
+          <svg *ngIf="feature.icon === 'shield'"
+               class="h-8 w-8 text-brandTeal"
+               fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+
+          <!-- Clock -->
+          <svg *ngIf="feature.icon === 'clock'"
+               class="h-8 w-8 text-brandTeal"
+               fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+
+          <!-- Lock -->
+          <svg *ngIf="feature.icon === 'lock'"
+               class="h-8 w-8 text-brandTeal"
+               fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+
+        </div>
+
+        <!-- Content -->
+        <h3 class="text-xl font-bold mb-3">
+          {{ feature.title | translate }}
+        </h3>
+
+        <p class="text-gray-500 leading-relaxed">
+          {{ feature.description | translate }}
+        </p>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+

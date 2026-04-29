@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgOptimizedImage, CommonModule } from '@angular/common';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
+import { LucideAngularModule } from 'lucide-angular';
+import { LocationService } from '../../../core/services/location.service';
 
 @Component({
   selector: 'app-navbar-component',
@@ -12,7 +14,8 @@ import { FormsModule } from '@angular/forms';
     RouterLink,
     NgOptimizedImage,
     FormsModule,
-    TranslateModule
+    TranslateModule,
+    LucideAngularModule
   ],
   templateUrl: './navbar-component.html',
   styleUrls: ['./navbar-component.scss']
@@ -27,8 +30,17 @@ export class NavbarComponent implements OnInit {
 
   currentLang = 'en';
   isDarkMode = false;
+  protected isMenuOpen: boolean = false;
+  protected userAvatar: any;
 
-  constructor(private translate: TranslateService) {
+  // 📍 Location and Currency signals
+  userLocation = signal<string>('Detecting...');
+  userCurrency = signal<string>('USD');
+
+  constructor(
+    private translate: TranslateService,
+    private locationService: LocationService
+  ) {
     // Ensure all languages are registered
     this.translate.addLangs(this.langs.map(l => l.code));
     this.translate.setDefaultLang('en');
@@ -46,6 +58,12 @@ export class NavbarComponent implements OnInit {
     const savedTheme = localStorage.getItem('theme');
     this.isDarkMode = savedTheme === 'dark';
     document.body.classList.toggle('dark-mode', this.isDarkMode);
+
+    // 📍 Detect location and currency
+    this.locationService.getCurrencyFromIP().subscribe(data => {
+      this.userLocation.set(`${data.city}, ${data.country}`);
+      this.userCurrency.set(data.currency);
+    });
   }
 
   // 🌗 Theme switcher

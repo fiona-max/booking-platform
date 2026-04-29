@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  apiUrl: 'https://your-production-api-url.com/api/flights',
   firebase: {
     apiKey: "AIzaSyCMpvm4X9Bbjmcv_CUmm5jO8yhtu9prqkE",
     authDomain: "booking-app-a2823.firebaseapp.com",

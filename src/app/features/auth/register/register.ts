@@ -4,10 +4,11 @@ import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModul
 import { AuthService } from '../../../core/services/auth/auth-service';
 import {RouterLink} from '@angular/router';
 import {NavbarComponent} from '../../../shared/components/navbar-component/navbar-component';
+import { LucideAngularModule } from 'lucide-angular';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, NavbarComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, NavbarComponent, LucideAngularModule],
   templateUrl: './register.html',
   styleUrl: './register.scss'
 })

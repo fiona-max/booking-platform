@@ -1,3 +1,21 @@
+@import "tailwindcss";
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+@theme {
+  --color-primary: #0099A8;
+  --color-secondary: #D4AF37;
+  --color-tertiary: #1C1C1C;
+  --color-highlight: #ff6b6b;
+  --color-surface-light: #ffffff;
+  --color-surface-dark: #1a1a1a;
+  --color-muted-light: #6b7280;
+  --color-muted-dark: #9ca3af;
+  --color-text-light: #4b5563;
+  --color-text-dark: #111827;
+
+  --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
 /* You can add global styles to this file, and also import other style files */
 
 body.dark-mode {
