@@ -1,8 +1,8 @@
 /* ====== Light Theme (Default) ====== */
 :root {
-  --primary: #0494a4;
-  --primary-hover: #037a88;
-  --background-light: #f5f8f8;
+  --primary: #000000;
+  --primary-hover: #000000;
+  --background-light: #FFFFFF;
   --background-dark: #0f2123;
   --gold: #FFD700;
   --dark-gray: #333333;
@@ -10,48 +10,90 @@
   --form-bg: var(--background-light);
   --form-border: #ccc;
   --form-text: #000000;
+  --input-text: #000000;
+  --calendar-filter: none;
   --secondary: #735c00;
+    --color-primary: #000000;
+    --color-secondary: #5d5f5f;
+    --color-surface: #f9f9f9;
+    --color-surface-container: #eeeeee;
+    --color-surface-container-lowest: #ffffff;
+    --color-outline-variant: #cfc4c5;
+    --color-on-primary: #ffffff;
+    --font-manrope: 'Manrope', sans-serif;
+}
+:root {
+  --color-primary: #000000;
+  --color-secondary: #5d5f5f;
+  --color-surface: #f9f9f9;
+  --color-surface-container: #eeeeee;
+  --color-surface-container-lowest: #ffffff;
+  --color-outline-variant: #cfc4c5;
+  --color-on-primary: #ffffff;
+  --font-manrope: 'Manrope', sans-serif;
 }
 
 /* ====== Dark Theme ====== */
-body.dark-mode {
-  --primary: #0494a4;
-  --primary-hover: #037a88;
-  --background-light: #0f2123; /* swaps */
-  --background-dark: #0f2123;
-  --form-bg: #1c2e30;
-  --form-border: #333333;
-  --form-text: #ffffff;
-  --gold: #FFD700;
+//body.dark-mode {
+//  --primary: #0494a4;
+//  --primary-hover: #037a88;
+//  --background-light: #0f2123; /* swaps */
+//  --background-dark: #0f2123;
+//  --form-bg: #1c2e30;
+//  --form-border: #333333;
+//  --form-text: #ffffff;
+//  --input-text: #ffffff;
+//  --calendar-filter: invert(1);
+//  --gold: #FFD700;
+//}
 
-}
-
-/* ====== Utilities ====== */
+/* ====== Global Base Styles ====== */
 body {
   background-color: var(--background-light);
+  color: var(--form-text);
 }
 
-/* Colors */
+/* ====== Typography & Colors ====== */
 .text-primary-custom { color: var(--primary) !important; }
 .bg-primary-custom { background-color: var(--primary) !important; }
 .bg-light-custom { background-color: var(--background-light) !important; }
 .bg-dark-custom { background-color: var(--background-dark) !important; }
-.text-secondary-custom { color: var(--secondary) !important; }
-.bg-secondary-custom { background-color: var(--secondary) !important; }
+.text-custom-dark { color: var(--form-text) !important; }
+.text-custom-muted { color: var(--form-text) !important; opacity: 0.7; }
+.text-secondary-custom { color: var(--background-light) !important; }
+//.text-secondary-custom { color: #FFFFFF !important;}
 
-/* Buttons */
+/* ====== Common Elements ====== */
+.border-custom { border-color: var(--form-border) !important; }
+
+.card-custom {
+  background-color: var(--form-bg) !important;
+  border-color: var(--form-border) !important;
+  color: var(--form-text) !important;
+}
+
+/* Theme Aware Options */
+select option {
+  background-color: var(--background-light);
+  color: var(--form-text);
+}
+
+/* ====== Buttons ====== */
 .btn-primary-custom {
   background-color: var(--primary) !important;
   border-color: var(--primary) !important;
   border-radius: 0.5rem;
   color: var(--white) !important;
+  transition: all 0.2s ease-in-out;
 }
-.btn-fade-primary{
-  background-color: rgba(5, 189, 209, 0.2);
-}
+
 .btn-primary-custom:hover {
   background-color: var(--primary-hover) !important;
   border-color: var(--primary-hover) !important;
+}
+
+.btn-fade-primary {
+  background-color: rgba(5, 189, 209, 0.2);
 }
 
 .btn-google {
@@ -60,41 +102,108 @@ body {
   border: 1px solid var(--form-border);
   border-radius: 0.5rem;
 }
+
 .btn-google:hover {
   background-color: var(--background-light);
 }
 
-/* Forms */
+/* ====== Forms ====== */
 .form-control-custom {
   border-radius: 0.5rem;
   background-color: var(--form-bg);
   color: var(--form-text);
   border: 1px solid var(--form-border);
 }
-.text-custom-dark{
-  color: var(--form-text);
+
+.form-control::placeholder {
+  color: var(--form-text) !important;
+  opacity: 0.6;
 }
 
-/* Links */
+.form-control:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 0.25rem rgba(4, 148, 164, 0.25) !important;
+}
+
+/* Custom Primary Color for Bootstrap Form Elements */
+.form-check-input:checked {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+
+.form-check-input:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 0.25rem rgba(4, 148, 164, 0.25) !important;
+}
+
+.form-select {
+  border-color: var(--form-border) !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%230494a4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.75rem center !important;
+  background-size: 16px 12px !important;
+  padding-right: 2.5rem !important;
+}
+
+.form-select:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 0.25rem rgba(4, 148, 164, 0.25) !important;
+}
+
+.form-select.border-0 {
+  padding-right: 1.5rem !important;
+  background-position: right 0.2rem center !important;
+}
+
+.form-select.border-0:focus {
+  box-shadow: none !important;
+  border-bottom: 2px solid var(--primary) !important;
+  border-radius: 0;
+}
+
+input {
+  color: var(--input-text) !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: var(--calendar-filter);
+}
+
+.form-range::-webkit-slider-thumb {
+  background-color: var(--primary) !important;
+}
+
+.form-range::-moz-range-thumb {
+  background-color: var(--primary) !important;
+}
+
+.form-range:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.25rem rgba(4, 148, 164, 0.25) !important;
+}
+
+/* ====== Links ====== */
 .link-primary-custom {
   color: var(--primary);
   text-decoration: none;
 }
+
 .link-primary-custom:hover {
   color: var(--primary-hover);
 }
 
-/* Dividers */
+/* ====== Layout Utilities ====== */
 .form-divider {
   display: flex;
   align-items: center;
   text-align: center;
 }
+
 .form-divider::before,
 .form-divider::after {
   content: '';
   flex: 1;
   border-bottom: 1px solid var(--form-border);
 }
+
 .form-divider:not(:empty)::before { margin-right: .75em; }
 .form-divider:not(:empty)::after { margin-left: .75em; }

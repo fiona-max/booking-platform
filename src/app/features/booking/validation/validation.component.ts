@@ -1,7 +1,8 @@
 import { Component, signal, inject, OnInit, computed, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FlightService } from '../../../core/services/flight.service';
+import { LocationService } from '../../../core/services/location.service';
 import { FlightOffer } from '../../../core/models/flight.model';
 import { LucideAngularModule } from 'lucide-angular';
 import { TranslateModule } from '@ngx-translate/core';
@@ -24,7 +25,13 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class ValidationComponent implements OnInit, OnDestroy {
   private readonly flightService = inject(FlightService);
+  private readonly locationService = inject(LocationService);
   private readonly router = inject(Router);
+  private readonly location = inject(Location);
+
+  // Globally shared currency
+  userCurrency = computed(() => this.locationService.selectedCurrency());
+  exchangeRate = signal<number>(1);
 
   // State signals
   selectedFlight = signal<FlightOffer | null>(null);
@@ -97,11 +104,11 @@ export class ValidationComponent implements OnInit, OnDestroy {
     const total = parseFloat(price.total);
     const taxes = total - base;
     return {
-      currency: price.currency,
-      base: base.toFixed(2),
-      taxes: taxes.toFixed(2),
-      discount: (210.00).toFixed(2), // Static discount as in UI for now
-      grandTotal: (total - 210.00).toFixed(2)
+      currency: this.userCurrency(),
+      base: (base * this.exchangeRate()).toFixed(2),
+      taxes: (taxes * this.exchangeRate()).toFixed(2),
+      discount: (210.00 * this.exchangeRate()).toFixed(2), // Static discount as in UI for now
+      grandTotal: ((total - 210.00) * this.exchangeRate()).toFixed(2)
     };
   });
 
@@ -116,6 +123,7 @@ export class ValidationComponent implements OnInit, OnDestroy {
           const validatedOffer = response.data?.flightOffers?.[0] || response.flightOffer || flight;
           this.selectedFlight.set(validatedOffer);
           this.flightService.setSelectedFlight(validatedOffer);
+          this.updateExchangeRate(validatedOffer.price.currency, this.locationService.selectedCurrency());
           this.isLoading.set(false);
           this.startTimer();
         },
@@ -149,7 +157,56 @@ export class ValidationComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
+  private updateExchangeRate(from: string, to: string) {
+    this.locationService.convertAmount(1, from, to).subscribe(rate => {
+      this.exchangeRate.set(rate);
+    });
+  }
+
+  // Map of airline codes to full names
+  private readonly airlineNames: { [key: string]: string } = {
+    'VY': 'Vueling',
+    'IB': 'Iberia',
+    'AF': 'Air France',
+    'DY': 'Norwegian Air',
+    'UX': 'Air Europa',
+    'BA': 'British Airways',
+    'LH': 'Lufthansa',
+    'FR': 'Ryanair',
+    'U2': 'EasyJet',
+    'TK': 'Turkish Airlines',
+    'EK': 'Emirates',
+    'QR': 'Qatar Airways',
+    'AA': 'American Airlines',
+    'DL': 'Delta Air Lines',
+    'UA': 'United Airlines',
+    'TP': 'TAP Air Portugal',
+    'KL': 'KLM',
+    'AZ': 'ITA Airways',
+    'SN': 'Brussels Airlines',
+    'OS': 'Austrian Airlines',
+    'LX': 'Swiss International Air Lines'
+  };
+
+  /**
+   * Returns the full name of an airline based on its code.
+   */
+  getAirlineName(code: string): string {
+    return this.airlineNames[code] || code;
+  }
+
+  /**
+   * Returns the URL for an airline logo based on its IATA code.
+   */
+  getAirlineLogoUrl(code: string): string {
+    return `https://www.gstatic.com/flights/airline_logos/70px/${code}.png`;
+  }
+
   proceedToCheckout() {
     this.router.navigate(['/booking']);
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

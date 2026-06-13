@@ -1,249 +1,406 @@
-<main class="pt-4 pb-20 bg-gray-50 dark:bg-zinc-950 min-h-screen font-body text-zinc-900 dark:text-zinc-100 antialiased">
-  <section class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-b border-zinc-200/50 dark:border-zinc-800/50 sticky top-0 z-40 shadow-sm">
-    <div class="max-w-7xl mx-auto px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div class="flex items-center gap-6">
-        <div class="w-14 h-14 rounded-2xl bg-primary-custom/10 flex items-center justify-center text-primary-custom shadow-inner border border-primary-custom/20">
-          <lucide-icon name="plane" class="w-7 h-7"></lucide-icon>
-        </div>
-        <div>
-          <div class="flex items-center gap-2 mb-0.5">
-            <h6 class="text-lg font-black font-headline tracking-tight text-zinc-900 dark:text-zinc-100 uppercase">{{ origin() }}</h6>
-            <lucide-icon name="arrow-right" class="w-5 h-5 text-zinc-400"></lucide-icon>
-            <h6 class="text-lg font-black font-headline tracking-tight text-zinc-900 dark:text-zinc-100 uppercase">{{ destination() }}</h6>
-          </div>
-          <p class="text-xs text-zinc-400 font-black uppercase tracking-widest flex items-center gap-2">
-            <span>1 Adult</span>
-            <span class="w-1 h-1 rounded-full bg-zinc-300"></span>
-            <span>Economy Class</span>
-          </p>
-        </div>
-      </div>
-      <button (click)="modifySearch()" class="group flex items-center gap-3 px-8 py-3 rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-black text-xs uppercase tracking-widest hover:bg-primary-custom dark:hover:bg-primary-custom hover:text-white transition-all shadow-lg hover:shadow-primary/30 active:scale-95">
-        <lucide-icon name="sliders" class="w-4 h-4"></lucide-icon>
-        {{ 'FLIGHT_RESULTS.MODIFY_SEARCH' | translate }}
-      </button>
+<main class="pkp-main px-4 px-md-5 pb-5 mt-5">
+
+  <!-- Search Info Banner -->
+  <div class="d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-4 mb-5 pb-4 pkp-section-divider">
+    <div>
+      <span class="pkp-caption d-block mb-2">CURATED DISCOVERY</span>
+      <h1 class="pkp-display-lg mb-0 text-uppercase">{{ origin() }} — {{ destination() }}</h1>
+<!--      <p class="pkp-body-secondary mt-3 mb-0" style="max-width: 480px;">-->
+<!--        One-way flight · {{ flights()[0]?.itineraries?.[0]?.segments?.[0]?.departure?.at | date:'MMM d, yyyy' }} · 1 Traveller · {{ selectedCabin() || 'Economy' | titlecase }}-->
+<!--      </p>-->
+      <p class="pkp-body-secondary mt-3 mb-0" style="max-width: 480px;">
+        {{searchSummary}} · {{ selectedCabin() || 'Economy' | titlecase }}
+      </p>
     </div>
-  </section>
+    <button (click)="modifySearch()" class="pkp-btn-outline d-flex align-items-center gap-2">
+      <span class="fa fa-edit" style="font-size:14px;"></span>
+      MODIFY SEARCH
+    </button>
+  </div>
 
-  <div class="max-w-7xl mx-auto px-8 mt-12">
-    <div class="flex flex-col lg:flex-row gap-12">
-      <aside class="flex flex-col w-full lg:w-72 p-6 gap-8 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-2xl h-fit sticky top-32 shadow-soft border border-white/20 dark:border-zinc-800">
-        <div class="border-b border-zinc-100 dark:border-zinc-800 pb-4">
-          <div class="flex items-center justify-between mb-1">
-            <h2 class="text-xl font-black font-headline text-secondary-custom tracking-tight">{{ 'FLIGHT_RESULTS.FILTERS' | translate }}</h2>
-            <button (click)="resetFilters()" class="text-[10px] font-black text-primary-custom uppercase tracking-widest hover:text-secondary-custom transition-colors">{{ 'FLIGHT_RESULTS.RESET_ALL' | translate }}</button>
-          </div>
-          <p class="text-[11px] text-zinc-400 font-bold uppercase tracking-wider">{{ 'FLIGHT_RESULTS.REFINE_JOURNEY' | translate }}</p>
+  <div [class.d-none]="!showSearchForm()" class="mb-5 animate-fade-in">
+    <app-flight-search-form [initialValues]="searchInitialValues"></app-flight-search-form>
+  </div>
+
+  <div class="row g-5">
+    <aside class="col-12 col-lg-3">
+      <div class="card shadow-sm rounded p-4 position-sticky" style="top: 100px;">
+
+        <!-- Header -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h2 class="h5 fw-bold mb-0">Filters</h2>
+          <button (click)="resetFilters()" class="btn btn-link btn-sm p-0 fw-bold text-primary text-decoration-none">
+            Reset
+          </button>
         </div>
 
-        <div class="space-y-8">
-          <!-- Stops Filter -->
+        <div class="vstack gap-4">
+
+          <!-- Price Range -->
           <div>
-            <h3 class="text-xs font-black mb-4 flex items-center gap-2 text-zinc-400 uppercase tracking-widest">
-              <lucide-icon name="layers" class="w-4 h-4 text-primary-custom"></lucide-icon> {{ 'FLIGHT_RESULTS.STOPS' | translate }}
-            </h3>
-            <div class="flex flex-col gap-3">
-              <label class="flex items-center gap-3 cursor-pointer group">
-                <div class="relative flex items-center">
-                  <input type="checkbox" [checked]="selectedStops().includes(0)" (change)="toggleStop(0)"
-                         class="peer appearance-none w-5 h-5 rounded border-2 border-zinc-200 dark:border-zinc-700 checked:bg-primary-custom checked:border-primary-custom transition-all">
-                  <lucide-icon name="check" class="absolute text-white opacity-0 peer-checked:opacity-100 left-1/2 -translate-x-1/2 pointer-events-none w-4 h-4"></lucide-icon>
-                </div>
-                <span class="text-sm font-bold text-zinc-600 dark:text-zinc-300 group-hover:text-primary-custom transition-colors">{{ 'FLIGHT_RESULTS.NON_STOP' | translate }}</span>
-              </label>
-              <label class="flex items-center gap-3 cursor-pointer group">
-                <div class="relative flex items-center">
-                  <input type="checkbox" [checked]="selectedStops().includes(1)" (change)="toggleStop(1)"
-                         class="peer appearance-none w-5 h-5 rounded border-2 border-zinc-200 dark:border-zinc-700 checked:bg-primary-custom checked:border-primary-custom transition-all">
-                  <lucide-icon name="check" class="absolute text-white opacity-0 peer-checked:opacity-100 left-1/2 -translate-x-1/2 pointer-events-none w-4 h-4"></lucide-icon>
-                </div>
-                <span class="text-sm font-bold text-zinc-600 dark:text-zinc-300 group-hover:text-primary-custom transition-colors">{{ 'FLIGHT_RESULTS.ONE_STOP' | translate }}</span>
-              </label>
-              <label class="flex items-center gap-3 cursor-pointer group">
-                <div class="relative flex items-center">
-                  <input type="checkbox" [checked]="selectedStops().includes(2)" (change)="toggleStop(2)"
-                         class="peer appearance-none w-5 h-5 rounded border-2 border-zinc-200 dark:border-zinc-700 checked:bg-primary-custom checked:border-primary-custom transition-all">
-                  <lucide-icon name="check" class="absolute text-white opacity-0 peer-checked:opacity-100 left-1/2 -translate-x-1/2 pointer-events-none w-4 h-4"></lucide-icon>
-                </div>
-                <span class="text-sm font-bold text-zinc-600 dark:text-zinc-300 group-hover:text-primary-custom transition-colors">{{ 'FLIGHT_RESULTS.TWO_STOPS' | translate }}</span>
-              </label>
+            <h3 class="h6 fw-bold mb-3">Price Range</h3>
+
+            <input type="range"
+                   class="form-range"
+                   [min]="minPriceInResults()"
+                   [max]="maxPriceInResults()"
+                   [ngModel]="maxPrice() || maxPriceInResults()"
+                   (ngModelChange)="maxPrice.set($event)">
+
+            <div class="d-flex justify-content-between mt-2">
+              <small class="text-muted">
+                {{ userCurrency() }} {{ (minPriceInResults() * exchangeRate()) | number:'1.0-0' }}
+              </small>
+              <small class="text-muted">
+                {{ userCurrency() }} {{ ((maxPrice() || maxPriceInResults()) * exchangeRate()) | number:'1.0-0' }}
+              </small>
             </div>
           </div>
 
-          <!-- Airlines Filter -->
+          <!-- Airlines -->
           <div>
-            <h3 class="text-xs font-black mb-4 flex items-center gap-2 text-zinc-400 uppercase tracking-widest">
-              <lucide-icon name="plane" class="w-4 h-4 text-primary-custom"></lucide-icon> {{ 'FLIGHT_RESULTS.AIRLINES' | translate }}
-            </h3>
-            <div class="flex flex-col gap-3 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+            <h3 class="h6 fw-bold mb-3">Airlines</h3>
+
+            <div class="vstack gap-2">
               @for (airline of airlineOptions(); track airline) {
-                <label class="flex items-center gap-3 cursor-pointer group">
-                  <div class="relative flex items-center">
-                    <input type="checkbox" [checked]="selectedAirlines().includes(airline)" (change)="toggleAirline(airline)"
-                           class="peer appearance-none w-5 h-5 rounded border-2 border-zinc-200 dark:border-zinc-700 checked:bg-primary-custom checked:border-primary-custom transition-all">
-                    <lucide-icon name="check" class="absolute text-white opacity-0 peer-checked:opacity-100 left-1/2 -translate-x-1/2 pointer-events-none w-4 h-4"></lucide-icon>
-                  </div>
-                  <span class="text-sm font-bold text-zinc-600 dark:text-zinc-300 group-hover:text-primary-custom transition-colors">{{ getAirlineName(airline) }}</span>
-                </label>
+                <div class="form-check d-flex align-items-center gap-2">
+                  <input type="checkbox"
+                         class="form-check-input"
+                         [id]="'airline-' + airline"
+                         [checked]="selectedAirlines().includes(airline)"
+                         (change)="toggleAirline(airline)">
+
+                  <label class="form-check-label small fw-medium d-flex align-items-center gap-2"
+                         [for]="'airline-' + airline">
+
+                    <img [src]="getAirlineLogoUrl(airline)"
+                         [alt]="getAirlineName(airline)"
+                         style="width: 20px; height: 20px; object-fit: contain;">
+
+                    {{ getAirlineName(airline) }}
+                  </label>
+                </div>
               }
             </div>
           </div>
 
-          <!-- Cabin Class Filter -->
+          <!-- Stops -->
           <div>
-            <h3 class="text-xs font-black mb-4 flex items-center gap-2 text-zinc-400 uppercase tracking-widest">
-              <lucide-icon name="zap" class="w-4 h-4 text-primary-custom"></lucide-icon> {{ 'FLIGHT_RESULTS.CABIN_CLASS' | translate }}
-            </h3>
-            <div class="relative max-w-[180px]">
-              <select [ngModel]="selectedCabin()" (ngModelChange)="selectedCabin.set($event)"
-                      class="w-full text-xs font-bold p-2 pr-8 rounded-lg bg-zinc-50 dark:bg-zinc-800 border-2 border-zinc-100 dark:border-zinc-700 appearance-none focus:border-primary-custom transition-colors">
-                <option [ngValue]="null">{{ 'FLIGHT_RESULTS.ALL_CLASSES' | translate }}</option>
-                <option value="ECONOMY">{{ 'FLIGHT_RESULTS.ECONOMY' | translate }}</option>
-                <option value="PREMIUM_ECONOMY">{{ 'FLIGHT_RESULTS.PREMIUM_ECONOMY' | translate }}</option>
-                <option value="BUSINESS">{{ 'FLIGHT_RESULTS.BUSINESS' | translate }}</option>
-                <option value="FIRST">{{ 'FLIGHT_RESULTS.FIRST' | translate }}</option>
-              </select>
-              <lucide-icon name="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none w-3 h-3"></lucide-icon>
-            </div>
-          </div>
+            <h3 class="h6 fw-bold mb-3">Stops</h3>
 
-          <!-- Price Range Filter -->
-          <div>
-            <h3 class="text-xs font-black mb-4 flex items-center gap-2 text-zinc-400 uppercase tracking-widest">
-              <lucide-icon name="dollar-sign" class="w-4 h-4 text-primary-custom"></lucide-icon> {{ 'FLIGHT_RESULTS.MAX_PRICE' | translate }}
-            </h3>
-            <div class="px-1">
-              <input type="range"
-                     [min]="minPriceInResults()"
-                     [max]="maxPriceInResults()"
-                     [ngModel]="maxPrice() || maxPriceInResults()"
-                     (ngModelChange)="maxPrice.set($event)"
-                     class="w-full h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full appearance-none cursor-pointer accent-secondary-custom">
-              <div class="flex justify-between mt-4">
-                <div class="flex flex-col">
-                  <span class="text-[9px] font-black text-zinc-400 uppercase">Min</span>
-                  <span class="text-xs font-bold text-zinc-600 dark:text-zinc-300">{{ flights()[0]?.price?.currency }} {{ minPriceInResults() | number:'1.0-0' }}</span>
-                </div>
-                <div class="flex flex-col items-end">
-                  <span class="text-[9px] font-black text-zinc-400 uppercase">Max</span>
-                  <span class="text-xs font-bold text-primary-custom">{{ flights()[0]?.price?.currency }} {{ (maxPrice() || maxPriceInResults()) | number:'1.0-0' }}</span>
-                </div>
+            <div class="vstack gap-2">
+              <div class="form-check">
+                <input type="checkbox"
+                       id="stop-0"
+                       class="form-check-input"
+                       [checked]="selectedStops().includes(0)"
+                       (change)="toggleStop(0)">
+                <label class="form-check-label small fw-medium" for="stop-0">
+                  Nonstop
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input type="checkbox"
+                       id="stop-1"
+                       class="form-check-input"
+                       [checked]="selectedStops().includes(1)"
+                       (change)="toggleStop(1)">
+                <label class="form-check-label small fw-medium" for="stop-1">
+                  1 stop or fewer
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input type="checkbox"
+                       id="stop-2"
+                       class="form-check-input"
+                       [checked]="selectedStops().includes(2)"
+                       (change)="toggleStop(2)">
+                <label class="form-check-label small fw-medium" for="stop-2">
+                  2+ stops
+                </label>
               </div>
             </div>
           </div>
-        </div>
-      </aside>
 
-      <!-- Main Content -->
-      <div class="flex-1 space-y-8">
-        <div class="flex bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm p-1.5 rounded-2xl w-fit border border-zinc-200 dark:border-zinc-800 shadow-sm">
-          <button (click)="sortBy.set('cheapest')"
-                  [class]="'px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ' + (sortBy() === 'cheapest' ? 'bg-primary-custom text-white shadow-lg shadow-primary/30' : 'text-zinc-400 hover:text-primary-custom')">
-            {{ 'FLIGHT_RESULTS.CHEAPEST' | translate }}
-          </button>
-          <button (click)="sortBy.set('fastest')"
-                  [class]="'px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ' + (sortBy() === 'fastest' ? 'bg-primary-custom text-white shadow-lg shadow-primary/30' : 'text-zinc-400 hover:text-primary-custom')">
-            {{ 'FLIGHT_RESULTS.FASTEST' | translate }}
-          </button>
-          <button (click)="sortBy.set('best')"
-                  [class]="'px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ' + (sortBy() === 'best' ? 'bg-primary-custom text-white shadow-lg shadow-primary/30' : 'text-zinc-400 hover:text-primary-custom')">
-            {{ 'FLIGHT_RESULTS.BEST' | translate }}
-          </button>
-        </div>
+          <!-- Cabin Class -->
+          <div>
+            <h3 class="h6 fw-bold mb-3">Cabin Class</h3>
 
-        <!-- Error Message -->
-        @if (error()) {
-          <div class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-xl font-medium">
-            {{ error() }}
+            <select class="form-select form-select-sm"
+                    [ngModel]="selectedCabin()"
+                    (ngModelChange)="selectedCabin.set($event)">
+              <option [ngValue]="null">All Classes</option>
+              <option value="ECONOMY">Economy</option>
+              <option value="PREMIUM_ECONOMY">Premium Economy</option>
+              <option value="BUSINESS">Business</option>
+              <option value="FIRST">First</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+    </aside>
+
+
+    <!-- Flight Results -->
+    <div class="col-12 col-md-9">
+      <!-- Sort Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4 pb-3">
+        <span class="pkp-body-secondary">{{ filteredFlights().length }} Results found</span>
+        <div class="d-flex align-items-center gap-3">
+          <span class="pkp-label-bold">SORT BY:</span>
+          <select class="pkp-sort-select" [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+            <option value="best">RECOMMENDED</option>
+            <option value="cheapest">LOWEST PRICE</option>
+            <option value="fastest">SHORTEST DURATION</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      @if (error()) {
+        <div class="alert alert-danger rounded-4 shadow-sm mb-4" role="alert">
+          <div class="d-flex align-items-center gap-2">
+            <span class="material-symbols-outlined">error</span>
+            <span class="fw-medium">{{ error() }}</span>
+          </div>
+        </div>
+      }
+
+      <!-- Flight Cards -->
+      <div class="d-flex flex-column gap-2">
+
+        @for (flight of paginatedFlights(); track flight.id) {
+          <div class="card border shadow-sm-hover transition-all mb-4">
+            <div class="card-body p-4">
+              <div class="row align-items-center g-3">
+                <div class="col-md-2">
+                  <div class="mb-1">
+                      <img
+                        [src]="getAirlineLogo(flight.validatingAirlineCodes[0])"
+                        [alt]="getAirlineName(flight.validatingAirlineCodes[0])"
+                        class="img-fluid"
+                        style="max-width:60px;"
+                      />
+                    <div class="text-uppercase small text-muted mb-0 fw-bold" style="font-size: 11px;">
+                      {{ getAirlineName(flight.validatingAirlineCodes[0]) }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="d-flex align-items-center justify-content-between">
+
+                    <div class="text-start">
+                      <h4 class="h2 fw-bold mb-0">
+                        {{ flight.itineraries?.[0]?.segments?.[0]?.departure?.at | date:'HH:mm' }}
+                      </h4>
+                      <p class="mb-0 text-muted">{{ flight.itineraries?.[0]?.segments?.[0]?.departure?.iataCode }}</p>
+                    </div>
+
+                    <div class="d-flex flex-column align-items-center flex-grow-1 px-4">
+                    <span class="small text-muted mb-1">
+                          {{ flight.itineraries?.[0]?.duration?.replace('PT', '')?.toLowerCase() }}
+                    </span>
+                      <div class="position-relative w-100 border-top border-secondary-subtle" style="height: 2px;">
+                        <span class="fa fa-plane text-dark position-absolute top-50 start-50 translate-middle bg-white px-2 fs-6"></span>
+                      </div>
+                      <span class="badge bg-secondary-subtle text-dark border-0 mt-2 text-uppercase tracking-wider" style="font-size: 10px;">
+                          @if ((flight.itineraries?.[0]?.segments?.length || 0) <= 1) {
+                            NON-STOP
+                          } @else {
+                            {{ (flight.itineraries[0].segments.length - 1) }} STOP
+                          }
+                      </span>
+                    </div>
+
+                    <div class="text-end">
+                      <p class="text-uppercase small text-muted mb-1 fw-bold tracking-wider" style="font-size: 11px; visibility: hidden;">
+                        Spacing
+                      </p>
+                      <h4 class="h2 fw-bold mb-0">
+                        {{ flight.itineraries?.[0]?.segments?.[(flight.itineraries?.[0]?.segments?.length || 1) - 1]?.arrival?.at | date:'HH:mm' }}
+                        @if ((flight.itineraries?.[0]?.segments?.[(flight.itineraries?.[0]?.segments?.length || 1) - 1]?.arrival?.at | date:'d') !== (flight.itineraries?.[0]?.segments?.[0]?.departure?.at | date:'d')) {
+                          <small class="text-muted align-top fs-6">+1</small>
+                        }
+                      </h4>
+                      <p class="mb-0 text-muted">
+                        {{ flight.itineraries?.[0]?.segments?.[(flight.itineraries?.[0]?.segments?.length || 1) - 1]?.arrival?.iataCode }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-1 d-none d-md-flex justify-content-center">
+                  <div class="vr" style="height: 60px;"></div>
+                </div>
+
+                <div class="col-md-3 d-flex flex-row flex-md-column justify-content-between align-items-end justify-content-md-end text-end">
+                  <div>
+                    <span class="text-uppercase text-muted small fw-bold tracking-wider" style="font-size: 10px;">FROM</span>
+
+                    @if (parseFloat(flight.price.total) > 1000) {
+                      <div class="text-muted text-decoration-line-through small text-end" style="font-size: 12px;">
+                        {{ userCurrency() }} {{ (parseFloat(flight.price.total) * 1.2 * exchangeRate()) | number:'1.2-2' }}
+                      </div>
+                    }
+
+                    <p class="fw-semibold mb-0">
+                      {{ userCurrency() }} {{ (parseFloat(flight.price.total) * exchangeRate()) | number:'1.2-2' }}
+                    </p>
+                  </div>
+
+                  <button class="btn bg-primary-custom text-secondary-custom px-4 py-2 mt-md-2 text-uppercase fw-bold btn-sm d-flex align-items-center gap-2"
+                          (click)="selectFlight(flight)" [disabled]="loading()">
+                    @if (loading()) {
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    }
+                    SELECT
+                  </button>
+                </div>
+
+              </div>
+            </div>
           </div>
         }
 
-        <!-- Flight Results List -->
-        <div class="grid gap-6">
-          @for (flight of filteredFlights(); track flight.id) {
-            <div class="group bg-white dark:bg-zinc-900 rounded-xl p-8 border border-zinc-200 dark:border-zinc-800 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 relative overflow-hidden">
-              <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
-                <div class="flex-1 grid grid-cols-1 md:grid-cols-3 items-center gap-8">
-                  <!-- Airline -->
-                  <div class="flex items-center gap-4">
-                    <div>
-                      <p class="font-bold font-headline text-zinc-900 dark:text-zinc-100">{{ getAirlineName(flight.validatingAirlineCodes[0]) }} Airlines</p>
-                      <p class="text-xs text-zinc-500 font-medium">Flight {{ flight.validatingAirlineCodes[0] }}-{{ flight.id }}</p>
-                    </div>
-                  </div>
+<!--        <div *ngFor="let flight of paginatedFlights()" class="card shadow-sm p-3 mb-4">-->
+<!--          <div class="d-flex justify-content-between align-items-start mb-3">-->
+<!--            <div class="d-flex align-items-center gap-3">-->
+<!--              <div class="border bg-white d-flex align-items-center justify-content-center"-->
+<!--                   style="width:48px; height:48px;">-->
+<!--                <img-->
+<!--                  [src]="getAirlineLogo(flight.validatingCarrier!)"-->
+<!--                  [alt]="getAirlineName(flight.validatingCarrier!)"-->
+<!--                  class="img-fluid"-->
+<!--                  style="max-width:32px;"-->
+<!--                />-->
+<!--              </div>-->
 
-                  <!-- Flight Times (First Itinerary) -->
-                  <div class="flex items-center justify-between col-span-2">
-                    <div class="text-center md:text-left">
-                      <p class="text-2xl font-bold font-headline tracking-tight">{{ flight.itineraries[0].segments[0].departure.at | date:'HH:mm' }}</p>
-                      <p class="text-xs text-zinc-500 font-bold uppercase tracking-widest">{{ flight.itineraries[0].segments[0].departure.iataCode }}</p>
-                    </div>
-                    <div class="flex-1 px-8 flex flex-col items-center">
-                      <p class="text-[10px] text-zinc-500 font-black uppercase tracking-widest mb-2">{{ flight.itineraries[0].duration.replace('PT', '').toLowerCase() }}</p>
-                      <div class="w-full h-[1px] bg-zinc-200 dark:bg-zinc-700 relative">
-                        <div class="absolute -top-1 left-0 w-2 h-2 rounded-full border border-primary bg-white dark:bg-zinc-900"></div>
-                        <div class="absolute -top-1 right-0 w-2 h-2 rounded-full bg-primary-custom"></div>
-                        @if (flight.itineraries[0].segments.length > 1) {
-                          <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-secondary border border-white dark:border-zinc-900"></div>
-                          <span class="absolute top-2 left-1/2 -translate-x-1/2 text-[10px] text-secondary-custom font-bold whitespace-nowrap">{{ flight.itineraries[0].segments.length - 1 }} Stop</span>
-                        } @else {
-                          <span class="absolute top-2 left-1/2 -translate-x-1/2 text-[10px] text-primary-custom font-bold">Non-stop</span>
-                        }
-                      </div>
-                    </div>
-                    <div class="text-center md:text-right">
-                      <p class="text-2xl font-bold font-headline tracking-tight">{{ flight.itineraries[0].segments[flight.itineraries[0].segments.length-1].arrival.at | date:'HH:mm' }}</p>
-                      <p class="text-xs text-zinc-500 font-bold uppercase tracking-widest">{{ flight.itineraries[0].segments[flight.itineraries[0].segments.length-1].arrival.iataCode }}</p>
-                    </div>
-                  </div>
-                </div>
+<!--              <div>-->
+<!--                <h5 class="text-primary text-uppercase mb-0">{{ getAirlineName(flight.validatingCarrier) }}</h5>-->
+<!--                <small class="text-muted">{{ flight.validatingCarrier }} {{ flight.itineraries?.[0]?.segments?.[0]?.number }} • {{ flight.itineraries?.[0]?.segments?.[0]?.aircraft?.code || 'Boeing 777-300ER' }}</small>-->
+<!--              </div>-->
+<!--            </div>-->
 
-                <!-- Pricing & Action -->
-                <div class="md:pl-12 md:border-l border-zinc-200 dark:border-zinc-800 flex flex-col items-end gap-2">
-                  <div class="text-right">
-                    <p class="text-xs text-zinc-500 font-bold">{{ 'FLIGHT_RESULTS.FROM' | translate }}</p>
-                    <p class="text-3xl font-extrabold font-headline text-secondary-custom tracking-tighter">{{ flight.price.currency }} {{ flight.price.total }}</p>
-                  </div>
-                  <button (click)="selectFlight(flight)" [disabled]="loading()"
-                          class="w-full md:w-auto bg-primary-custom text-white px-6 py-2 rounded-4 font-bold font-headline hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 flex items-center justify-center gap-2">
-                    @if (loading()) {
-                      <span class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
-                    }
-                    {{ 'FLIGHT_RESULTS.SELECT_FLIGHT' | translate }}
-                  </button>
-                </div>
-              </div>
-            </div>
-          } @empty {
-            <div class="text-center py-20 bg-white dark:bg-zinc-900 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700">
-              <span class="material-symbols-outlined text-6xl text-zinc-300 mb-4">search_off</span>
-              <p class="text-zinc-500 dark:text-zinc-400 text-lg">{{ 'FLIGHT_RESULTS.NO_FLIGHTS_FOUND' | translate }}</p>
-              <button (click)="modifySearch()" class="mt-4 px-6 py-2 bg-primary-custom text-white rounded-lg font-bold hover:opacity-90 transition-opacity">
-                {{ 'FLIGHT_RESULTS.TRY_ANOTHER_SEARCH' | translate }}
+<!--            <span *ngIf="parseFloat(flight.price.total) < 300" class="badge bg-light text-primary border">Best Value</span>-->
+<!--          </div>-->
+
+<!--          <div class="row text-center mb-3">-->
+<!--            <div class="col-md-4">-->
+<!--              <h3 class="mb-0">{{ flight.itineraries?.[0]?.segments?.[0]?.departure?.at | date:'HH:mm' }}</h3>-->
+<!--              <div class="text-secondary">{{ flight.itineraries?.[0]?.segments?.[0]?.departureAirport }}</div>-->
+<!--              <small class="text-muted">{{ flight.itineraries?.[0]?.segments?.[0]?.departureAirport }}</small>-->
+<!--            </div>-->
+
+<!--            <div class="col-md-4 d-flex flex-column align-items-center">-->
+<!--              <small class="text-muted">{{ flight.itineraries?.[0]?.duration?.replace('PT', '')?.toLowerCase() }}</small>-->
+<!--              <div class="w-100 border-top position-relative my-2">-->
+<!--                <div-->
+<!--                  class="position-absolute top-50 start-50 translate-middle bg-primary rounded-circle"-->
+<!--                  style="width:8px; height:8px;"-->
+<!--                ></div>-->
+<!--              </div>-->
+<!--              <small class="text-primary text-uppercase">-->
+<!--                {{ (flight.itineraries?.[0]?.segments?.length || 0) > 1 ? (flight.itineraries[0].segments.length - 1) + ' Stop' : 'Non-stop' }}-->
+<!--              </small>-->
+<!--            </div>-->
+
+<!--            <div class="col-md-4">-->
+<!--              <h3 class="mb-0">-->
+<!--                {{ flight.itineraries?.[0]?.segments?.[(flight.itineraries?.[0]?.segments?.length || 1) - 1]?.arrival?.at | date:'HH:mm' }}-->
+<!--                <small *ngIf="(flight.itineraries?.[0]?.segments?.[(flight.itineraries?.[0]?.segments?.length || 1) - 1]?.arrival?.at | date:'d') !== (flight.itineraries?.[0]?.segments?.[0]?.departure?.at | date:'d')" class="text-muted align-top">+1</small>-->
+<!--              </h3>-->
+<!--              <div class="text-secondary">{{ flight.itineraries?.[0]?.segments?.[(flight.itineraries?.[0]?.segments?.length || 1) - 1]?.arrivalAirport }}</div>-->
+<!--              <small class="text-muted">{{ flight.itineraries?.[0]?.segments?.[(flight.itineraries?.[0]?.segments?.length || 1) - 1]?.arrivalAirport }}</small>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="d-flex justify-content-between align-items-center border-top pt-3">-->
+<!--            <div class="d-flex gap-3 text-secondary fs-5">-->
+<!--              <i class="fa-solid fa-wifi"></i>-->
+<!--              <i class="fa-solid fa-bolt"></i>-->
+<!--              <i class="fa-solid fa-utensils"></i>-->
+<!--            </div>-->
+
+<!--            <div class="d-flex align-items-center gap-3">-->
+<!--              <div class="text-end">-->
+<!--                <div *ngIf="parseFloat(flight.price.total) > 1000" class="text-muted text-decoration-line-through">-->
+<!--                  {{ userCurrency() }} {{ (parseFloat(flight.price.total) * 1.2 * exchangeRate()) | number:'1.2-2' }}-->
+<!--                </div>-->
+<!--                <h4 class="mb-0">{{ userCurrency() }} {{ (parseFloat(flight.price.total) * exchangeRate()) | number:'1.2-2' }}</h4>-->
+<!--              </div>-->
+
+<!--              <button class="btn btn-primary text-uppercase" (click)="selectFlight(flight)" [disabled]="loading()">-->
+<!--                @if (loading()) {-->
+<!--                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>-->
+<!--                }-->
+<!--                Select Flight-->
+<!--              </button>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <!-- Empty state -->
+        @if (filteredFlights().length === 0) {
+          <div class="card border-0 shadow-sm rounded-4 py-5 text-center">
+            <div class="card-body">
+              <span class="fa fa-magnifying-glass display-1 text-custom-muted mb-3"></span>
+              <h4 class="fw-bold">No flights found</h4>
+              <p class="text-custom-muted mb-4">No flights found matching your criteria. Try adjusting your filters.</p>
+              <button (click)="resetFilters()" class="btn btn-outline-primary">
+                RESET FILTERS
               </button>
             </div>
-          }
-        </div>
+          </div>
+        }
 
-        <!-- Member CTA Section -->
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mt-16">
-          <div class="md:col-span-3 bg-primary-custom rounded-xl p-10 flex flex-col justify-between text-white relative overflow-hidden">
-            <div class="z-10">
-              <h3 class="text-2xl font-black font-headline mb-4 tracking-tight">{{ 'FLIGHT_RESULTS.UNLOCK_PRICING' | translate }}</h3>
-              <p class="text-white/80 max-w-sm mb-8 font-medium">{{ 'FLIGHT_RESULTS.UNLOCK_PRICING_DESC' | translate }}</p>
-              <button class="bg-secondary text-white px-8 py-3 rounded-full font-bold font-headline hover:brightness-110 transition-all shadow-xl shadow-black/20">{{ 'FLIGHT_RESULTS.JOIN_SOCIETY' | translate }}</button>
-            </div>
-            <div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -mr-24 -mt-24"></div>
-            <div class="absolute bottom-0 left-1/2 w-64 h-64 bg-white/5 rounded-full -ml-32 -mb-32"></div>
-          </div>
-          <div class="md:col-span-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-8 flex flex-col justify-center items-center text-center">
-            <lucide-icon name="car" class="w-12 h-12 text-secondary-custom mb-4"></lucide-icon>
-            <h4 class="text-lg font-bold font-headline text-zinc-900 dark:text-zinc-100 mb-2">{{ 'FLIGHT_RESULTS.TRAVEL_GUIDE' | translate }}</h4>
-            <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-6">{{ 'FLIGHT_RESULTS.TRAVEL_GUIDE_DESC' | translate }}</p>
-            <a class="text-primary-custom font-bold uppercase text-xs tracking-widest hover:underline decoration-2 underline-offset-8" href="#">{{ 'FLIGHT_RESULTS.CHAT_WITH_US' | translate }}</a>
-          </div>
-        </div>
       </div>
+
+
+
+      <!-- Pagination Navigation -->
+      @if (totalPages() > 1) {
+        <nav aria-label="Flight results pagination" class="mt-5">
+          <ul class="pagination justify-content-center gap-2 border-0">
+            <li class="page-item" [class.disabled]="currentPage() === 1">
+              <button class="page-link rounded-circle border-0 bg-light text-dark shadow-sm p-0 d-flex align-items-center justify-content-center"
+                      style="width: 40px; height: 40px;"
+                      (click)="prevPage()" [disabled]="currentPage() === 1">
+                <span class="fa fa-chevron-left" style="font-size: 12px;"></span>
+              </button>
+            </li>
+
+            @for (page of pages(); track $index) {
+              <li class="page-item">
+                @if (page === '...') {
+                  <span class="px-2 text-muted">...</span>
+                } @else {
+                  <button class="page-link rounded-circle border-0 shadow-sm p-0 d-flex align-items-center justify-content-center transition-all"
+                          [class.bg-primary-custom]="currentPage() === page"
+                          [class.text-secondary-custom]="currentPage() === page"
+                          [class.bg-light]="currentPage() !== page"
+                          [class.text-dark]="currentPage() !== page"
+                          style="width: 40px; height: 40px; font-weight: 600;"
+                          (click)="goToPage(page)">
+                    {{ page }}
+                  </button>
+                }
+              </li>
+            }
+
+            <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+              <button class="page-link rounded-circle border-0 bg-light text-dark shadow-sm p-0 d-flex align-items-center justify-content-center"
+                      style="width: 40px; height: 40px;"
+                      (click)="nextPage()" [disabled]="currentPage() === totalPages()">
+                <span class="fa fa-chevron-right" style="font-size: 12px;"></span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      }
     </div>
   </div>
 </main>

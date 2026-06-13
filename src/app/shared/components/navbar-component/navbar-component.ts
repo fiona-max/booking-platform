@@ -1,6 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgOptimizedImage, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -12,7 +12,6 @@ import { LocationService } from '../../../core/services/location.service';
   imports: [
     CommonModule,
     RouterLink,
-    NgOptimizedImage,
     FormsModule,
     TranslateModule,
     LucideAngularModule
@@ -33,9 +32,9 @@ export class NavbarComponent implements OnInit {
   protected isMenuOpen: boolean = false;
   protected userAvatar: any;
 
-  // 📍 Location and Currency signals
-  userLocation = signal<string>('Detecting...');
-  userCurrency = signal<string>('USD');
+  // 📍 Location and Currency signals linked to shared service
+  userLocation = computed(() => this.locationService.selectedLocation());
+  userCurrency = computed(() => this.locationService.selectedCurrency());
 
   constructor(
     private translate: TranslateService,
@@ -60,10 +59,7 @@ export class NavbarComponent implements OnInit {
     document.body.classList.toggle('dark-mode', this.isDarkMode);
 
     // 📍 Detect location and currency
-    this.locationService.getCurrencyFromIP().subscribe(data => {
-      this.userLocation.set(`${data.city}, ${data.country}`);
-      this.userCurrency.set(data.currency);
-    });
+    this.locationService.getCurrencyFromIP().subscribe();
   }
 
   // 🌗 Theme switcher
@@ -78,5 +74,13 @@ export class NavbarComponent implements OnInit {
     this.translate.use(lang);
     this.currentLang = lang;
     localStorage.setItem('lang', lang);
+  }
+
+  // 💰 Currency switcher (cycles through common currencies for demo)
+  toggleCurrency(): void {
+    const currencies = ['USD', 'EUR', 'GBP', 'AED', 'SAR', 'JPY'];
+    const currentIndex = currencies.indexOf(this.userCurrency());
+    const nextIndex = (currentIndex + 1) % currencies.length;
+    this.locationService.updateCurrency(currencies[nextIndex]);
   }
 }

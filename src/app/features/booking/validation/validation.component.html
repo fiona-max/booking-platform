@@ -1,61 +1,37 @@
-<!--<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm shadow-[#1B1B1B]/5">-->
-<!--  <div class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto">-->
-<!--    <div class="flex items-center gap-8">-->
-<!--      <span class="text-xl font-extrabold text-[#006670] tracking-tighter font-headline uppercase">PKP-ALLIANCE SOCIETY</span>-->
-<!--      <div class="hidden md:flex items-center gap-6">-->
-<!--        <span class="text-slate-600 font-medium flex items-center gap-2">-->
-<!--          <span class="w-6 h-6 rounded-full bg-[#006670] text-white flex items-center justify-center text-xs">1</span>-->
-<!--          Selection-->
-<!--        </span>-->
-<!--        <div class="w-8 h-px bg-slate-200"></div>-->
-<!--        <span class="text-[#006670] font-bold border-b-2 border-[#006670] pb-1 flex items-center gap-2">-->
-<!--          <span class="w-6 h-6 rounded-full bg-[#006670] text-white flex items-center justify-center text-xs">2</span>-->
-<!--          Validation-->
-<!--        </span>-->
-<!--        <div class="w-8 h-px bg-slate-200"></div>-->
-<!--        <span class="text-slate-400 flex items-center gap-2">-->
-<!--          <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-xs">3</span>-->
-<!--          Payment-->
-<!--        </span>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="flex items-center gap-4">-->
-<!--      <button class="text-slate-600 hover:text-[#006670] transition-colors p-2">-->
-<!--        <i class="bi bi-bell"></i>-->
-<!--      </button>-->
-<!--      <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">-->
-<!--        <i class="bi bi-person text-[#006670] text-xl"></i>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</nav>-->
-
-<div *ngIf="isLoading()" class="fixed inset-0 bg-white/80 backdrop-blur-md z-[100] flex flex-col items-center justify-center">
-  <div class="w-16 h-16 border-4 border-[#006670]/20 border-t-[#006670] rounded-full animate-spin mb-4"></div>
-  <p class="text-[#006670] font-headline text-xl font-bold animate-pulse">{{ 'VALIDATION.VALIDATING' | translate }}</p>
+<div *ngIf="isLoading()" class="fixed inset-0 bg-light-custom/80 backdrop-blur-md z-[100] flex flex-col items-center justify-center">
+  <div class="w-16 h-16 border-4 border-primary-custom/20 border-t-primary-custom rounded-full animate-spin mb-4"></div>
+  <p class="text-primary-custom font-headline text-xl font-bold animate-pulse">{{ 'VALIDATION.VALIDATING' | translate }}</p>
 </div>
 
-<div *ngIf="error()" class="fixed inset-0 bg-white/95 z-[100] flex flex-col items-center justify-center p-6 text-center">
+<div *ngIf="error()" class="fixed inset-0 bg-light-custom/95 z-[100] flex flex-col items-center justify-center p-6 text-center">
   <div class="w-20 h-20 rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-6">
     <lucide-icon name="triangle-alert" class="w-10 h-10"></lucide-icon>
   </div>
-  <h2 class="text-2xl font-headline font-extrabold text-slate-900 mb-2">{{ 'VALIDATION.FAILED' | translate }}</h2>
-  <p class="text-slate-600 max-w-md mb-8">{{ error() }}</p>
-  <button routerLink="/" class="teal-gradient text-white px-8 py-3 rounded-xl font-bold text-lg shadow-lg">
+  <h2 class="text-2xl font-headline font-extrabold text-custom-dark mb-2">{{ 'VALIDATION.FAILED' | translate }}</h2>
+  <p class="text-custom-muted max-w-md mb-8">{{ error() }}</p>
+  <button routerLink="/" class="btn-primary-custom text-white px-8 py-3 rounded-xl font-bold text-lg shadow-lg">
     {{ 'VALIDATION.RETURN_TO_SEARCH' | translate }}
   </button>
 </div>
 
-<main class="pt-32 pb-24 px-6 max-w-7xl mx-auto min-h-screen" *ngIf="!isLoading() && !error() && outboundSummary() as summary">
+<main class="pt-32 pb-24 px-6 max-w-7xl mx-auto min-h-screen bg-light-custom" *ngIf="!isLoading() && !error() && outboundSummary() as summary">
+  <!-- Back Button -->
+  <div class="mb-8">
+    <button (click)="goBack()" class="flex items-center gap-2 text-custom-muted hover:text-primary-custom transition-colors font-bold uppercase tracking-widest text-xs group">
+      <lucide-icon name="arrow-left" class="w-4 h-4 transition-transform group-hover:-translate-x-1"></lucide-icon>
+      {{ 'VALIDATION.BACK' | translate }}
+    </button>
+  </div>
+
   <!-- Success Confirmation Message -->
   <div class="flex flex-col md:flex-row items-center justify-between mb-12 gap-8">
     <div class="flex items-center gap-6">
-      <div class="w-16 h-16 rounded-full bg-[#006670]/10 flex items-center justify-center text-[#006670]">
+      <div class="w-16 h-16 rounded-full bg-primary-custom/10 flex items-center justify-center text-primary-custom">
         <lucide-icon name="check-circle" class="w-10 h-10"></lucide-icon>
       </div>
       <div>
-        <h1 class="font-headline text-4xl font-extrabold tracking-tight text-slate-900">{{ 'VALIDATION.CONFIRMED' | translate }}</h1>
-        <p class="text-slate-500 text-lg mt-1">{{ 'VALIDATION.SUCCESS_MSG' | translate }}</p>
+        <h1 class="font-headline text-4xl font-extrabold tracking-tight text-custom-dark">{{ 'VALIDATION.CONFIRMED' | translate }}</h1>
+        <p class="text-custom-muted text-lg mt-1">{{ 'VALIDATION.SUCCESS_MSG' | translate }}</p>
       </div>
     </div>
     <!-- Timer Component -->
@@ -71,71 +47,60 @@
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
     <!-- Left Column: Flight Summary -->
     <div class="lg:col-span-8 space-y-8">
-      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" *ngFor="let segment of outboundSegments(); let i = index">
-        <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-white">
+      <div class="card-custom rounded-xl shadow-sm border border-custom overflow-hidden" *ngFor="let segment of outboundSegments(); let i = index">
+        <div class="p-8 border-b border-custom flex justify-between items-center bg-light-custom">
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-lg bg-slate-50 flex items-center justify-center">
-              <lucide-icon name="plane" class="w-8 h-8 text-[#006670] rotate-90"></lucide-icon>
+            <div class="w-12 h-12 rounded-lg bg-light-custom border border-custom flex items-center justify-center overflow-hidden">
+              <img [src]="getAirlineLogoUrl(segment.airline)" [alt]="getAirlineName(segment.airline)" class="w-full h-full object-contain p-1">
             </div>
             <div>
-              <p class="text-sm font-bold text-[#006670] uppercase tracking-tighter">{{ 'VALIDATION.SEGMENT' | translate }} {{ i + 1 }}</p>
-              <p class="font-headline text-xl font-bold">{{ segment.originName }} ({{ segment.origin }}) {{ 'VALIDATION.TO' | translate }} {{ segment.destinationName }} ({{ segment.destination }})</p>
+              <p class="text-sm font-bold text-primary-custom uppercase tracking-tighter">{{ 'VALIDATION.SEGMENT' | translate }} {{ i + 1 }}</p>
+              <p class="font-headline text-xl font-bold text-custom-dark">{{ segment.originName }} ({{ segment.origin }}) {{ 'VALIDATION.TO' | translate }} {{ segment.destinationName }} ({{ segment.destination }})</p>
             </div>
           </div>
           <div class="text-right">
-            <p class="text-sm text-slate-500">{{ 'VALIDATION.FLIGHT_NO' | translate }}</p>
-            <p class="font-bold">{{ segment.flightNumber }}</p>
+            <p class="text-sm text-custom-muted">{{ 'VALIDATION.FLIGHT_NO' | translate }}</p>
+            <p class="font-bold text-custom-dark">{{ segment.flightNumber }}</p>
           </div>
         </div>
         <div class="p-8">
           <!-- Itinerary Detail -->
           <div class="flex flex-col md:flex-row justify-between items-center gap-8 relative">
             <div class="flex-1 flex flex-col items-start">
-              <span class="text-3xl font-headline font-extrabold">{{ segment.departureTime | date:'HH:mm' }}</span>
-              <span class="text-slate-600 font-medium">{{ segment.origin }} <span *ngIf="segment.terminal">· {{ 'VALIDATION.TERMINAL' | translate }} {{ segment.terminal }}</span></span>
-              <span class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-bold">{{ segment.departureTime | date:'MMM d, yyyy' }}</span>
+              <span class="text-3xl font-headline font-extrabold text-custom-dark">{{ segment.departureTime | date:'HH:mm' }}</span>
+              <span class="text-custom-dark font-medium">{{ segment.origin }} <span *ngIf="segment.terminal" class="text-custom-muted">· {{ 'VALIDATION.TERMINAL' | translate }} {{ segment.terminal }}</span></span>
+              <span class="text-xs text-custom-muted mt-1 uppercase tracking-wider font-bold">{{ segment.departureTime | date:'MMM d, yyyy' }}</span>
             </div>
             <div class="flex-1 flex flex-col items-center gap-2 relative px-12">
-              <span class="text-xs text-slate-500 uppercase tracking-widest font-bold" *ngIf="segment.duration">{{ segment.duration.replace('PT', '').toLowerCase() }}</span>
-              <div class="w-full h-px bg-slate-200 flex items-center justify-center relative">
-                <lucide-icon name="plane" class="w-6 h-6 text-[#006670] rotate-90 bg-white px-1"></lucide-icon>
+              <span class="text-xs text-custom-muted uppercase tracking-widest font-bold" *ngIf="segment.duration">{{ segment.duration.replace('PT', '').toLowerCase() }}</span>
+              <div class="w-full h-px bg-custom border-bottom border-custom flex items-center justify-center relative">
+                <lucide-icon name="plane" class="w-6 h-6 text-primary-custom rotate-90 bg-light-custom px-1"></lucide-icon>
               </div>
             </div>
             <div class="flex-1 flex flex-col items-end">
-              <span class="text-3xl font-headline font-extrabold">{{ segment.arrivalTime | date:'HH:mm' }}</span>
-              <span class="text-slate-600 font-medium">{{ segment.destination }} <span *ngIf="segment.arrivalTerminal">· {{ 'VALIDATION.TERMINAL' | translate }} {{ segment.arrivalTerminal }}</span></span>
-              <span class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-bold">{{ segment.arrivalTime | date:'MMM d, yyyy' }}</span>
+              <span class="text-3xl font-headline font-extrabold text-custom-dark">{{ segment.arrivalTime | date:'HH:mm' }}</span>
+              <span class="text-custom-dark font-medium">{{ segment.destination }} <span *ngIf="segment.arrivalTerminal" class="text-custom-muted">· {{ 'VALIDATION.TERMINAL' | translate }} {{ segment.arrivalTerminal }}</span></span>
+              <span class="text-xs text-custom-muted mt-1 uppercase tracking-wider font-bold">{{ segment.arrivalTime | date:'MMM d, yyyy' }}</span>
             </div>
           </div>
           <!-- Amenities -->
-          <div class="mt-10 pt-8 border-t border-slate-100 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="flex items-center gap-3 text-slate-600">
+          <div class="mt-10 pt-8 border-t border-custom grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="flex items-center gap-3 text-custom-muted">
               <lucide-icon name="car" class="w-5 h-5"></lucide-icon>
               <span class="text-sm">{{ segment.cabin | titlecase }} {{ 'FLIGHT_RESULTS.CABIN_CLASS' | translate }} ({{ segment.class }})</span>
             </div>
-            <div class="flex items-center gap-3 text-slate-600">
+            <div class="flex items-center gap-3 text-custom-muted">
               <lucide-icon name="briefcase" class="w-5 h-5"></lucide-icon>
               <span class="text-sm">{{ 'VALIDATION.CHECK_IN' | translate }}</span>
             </div>
-            <div class="flex items-center gap-3 text-slate-600">
+            <div class="flex items-center gap-3 text-custom-muted">
               <lucide-icon name="wifi" class="w-5 h-5"></lucide-icon>
               <span class="text-sm">{{ 'VALIDATION.WIFI' | translate }}</span>
             </div>
-            <div class="flex items-center gap-3 text-slate-600">
+            <div class="flex items-center gap-3 text-custom-muted">
               <lucide-icon name="info" class="w-5 h-5"></lucide-icon>
               <span class="text-sm">{{ segment.aircraft }}</span>
             </div>
-          </div>
-        </div>
-      </div>
-      <!-- Asymmetric Featured Image Section -->
-      <div class="relative group h-[300px] rounded-xl overflow-hidden bg-slate-200">
-        <img alt="Luxury Hotel" class="w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWAU_Iw-Hb8LBNObu45y1eQaB76Atrv7dgV3gQ-SupX0O27oBuNM_GknWqU_3W8VNxr3Fzg343i8XeWcYF7zBo02zx9DHcwq06qREFAB3EIGIZZyMoEAJEplAj1YH0nzkUKUWdwvSrtnrD4N8w7QvfQi91uGkxlQ2gqKnbONnn5fYgzFyvtCNb1-6uWjhP6x8ZpeSJRHoZJjmXhVu6LDTLN39GweFZKpJj8T9rgfqid1Yk0WznI_Hz0ZZb1CxzXxay_rqctrsOfLY"/>
-        <div class="absolute inset-0 bg-gradient-to-t from-[#001f23]/80 to-transparent flex flex-col justify-end p-10">
-          <div class="max-w-md">
-            <span class="bg-[#735c00] text-white px-3 py-1 rounded text-xs font-bold uppercase tracking-widest mb-4 inline-block">{{ 'VALIDATION.BENEFIT' | translate }}</span>
-            <h3 class="font-headline text-2xl font-extrabold text-white mb-2 leading-tight">{{ 'VALIDATION.CHAUFFEUR_TITLE' | translate }}</h3>
-            <p class="text-white/80 text-sm">{{ 'VALIDATION.CHAUFFEUR_DESC' | translate }}</p>
           </div>
         </div>
       </div>
@@ -143,50 +108,32 @@
     <!-- Right Column: Price Breakdown -->
     <div class="lg:col-span-4 sticky top-28 space-y-6" *ngIf= "priceSummary() as price">
 <!--    <div class="lg:col-span-4 sticky top-28 space-y-6">-->
-      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
-        <h2 class="font-headline text-xl font-extrabold mb-6 tracking-tight">{{ 'VALIDATION.PRICE_SUMMARY' | translate }}</h2>
+      <div class="card-custom rounded-xl shadow-sm border border-custom p-8">
+        <h2 class="font-headline text-xl font-extrabold mb-6 tracking-tight text-custom-dark">{{ 'VALIDATION.PRICE_SUMMARY' | translate }}</h2>
         <div class="space-y-4">
-          <div class="flex justify-between items-center text-slate-600">
+          <div class="flex justify-between items-center text-custom-muted">
             <span>{{ 'VALIDATION.BASE_FARE' | translate }}</span>
-            <span class="font-medium text-slate-900">{{ price.currency }} {{ price.base }}</span>
+            <span class="font-medium text-custom-dark">{{ userCurrency() }} {{ price.base }}</span>
           </div>
-          <div class="flex justify-between items-center text-slate-600">
+          <div class="flex justify-between items-center text-custom-muted">
             <span>{{ 'VALIDATION.TAXES_FEES' | translate }}</span>
-            <span class="font-medium text-slate-900">{{ price.currency }} {{ price.taxes }}</span>
+            <span class="font-medium text-custom-dark">{{ userCurrency() }} {{ price.taxes }}</span>
           </div>
-          <!-- Member Savings Highlight -->
-          <div class="bg-[#735c00]/5 p-4 rounded-lg flex items-center justify-between border border-[#735c00]/10">
-            <div class="flex items-center gap-2">
-              <lucide-icon name="star" class="w-5 h-5 text-[#735c00]"></lucide-icon>
-              <span class="text-sm font-bold text-[#735c00]">{{ 'VALIDATION.MEMBER_SAVINGS' | translate }}</span>
-            </div>
-            <span class="font-headline font-extrabold text-[#735c00]">-{{ price.currency }} {{ price.discount }}</span>
-          </div>
-          <div class="pt-6 mt-6 border-t border-slate-100 flex justify-between items-end">
+          <div class="pt-6 mt-6 border-t border-custom flex justify-between items-end">
             <div>
-              <p class="text-sm font-bold text-[#006670] uppercase tracking-wider">{{ 'VALIDATION.TOTAL_PRICE' | translate }}</p>
-              <p class="text-xs text-slate-500">{{ 'VALIDATION.ALL_TAXES' | translate }}</p>
+              <p class="text-sm font-bold text-primary-custom uppercase tracking-wider">{{ 'VALIDATION.TOTAL_PRICE' | translate }}</p>
+              <p class="text-xs text-custom-muted">{{ 'VALIDATION.ALL_TAXES' | translate }}</p>
             </div>
-            <span class="text-3xl font-headline font-extrabold text-[#006670]">{{ price.currency }} {{ price.grandTotal }}</span>
+            <span class="text-3xl font-headline font-extrabold text-primary-custom">{{ userCurrency() }} {{ price.grandTotal }}</span>
           </div>
         </div>
         <div class="mt-3 space-y-4">
-          <button (click)="proceedToCheckout()" class="w-full teal-gradient text-white my-1 py-2 rounded-4 font-bold text-lg shadow-lg shadow-[#006670]/20 hover:scale-[1.02] transition-transform active:scale-[0.98]">
+          <button (click)="proceedToCheckout()" class="w-full btn-primary-custom my-1 py-2 rounded-4 font-bold text-lg shadow-lg shadow-primary-custom/20 hover:scale-[1.02] transition-transform active:scale-[0.98]">
             {{ 'VALIDATION.PROCEED_TO_BOOKING' | translate }}
           </button>
-          <p class="text-[10px] text-center text-slate-500 uppercase tracking-widest font-bold">
+          <p class="text-[10px] text-center text-custom-muted uppercase tracking-widest font-bold">
             {{ 'VALIDATION.SECURED_SSL' | translate }}
           </p>
-        </div>
-      </div>
-      <!-- Trust Factor Card -->
-      <div class="bg-slate-50 rounded-xl p-6 border border-slate-100">
-        <div class="flex gap-4">
-          <lucide-icon name="shield-check" class="w-6 h-6 text-[#006670]"></lucide-icon>
-          <div>
-            <p class="font-bold text-sm">{{ 'VALIDATION.PRICE_GUARANTEE' | translate }}</p>
-            <p class="text-xs text-slate-500 leading-relaxed mt-1">{{ 'VALIDATION.PRICE_GUARANTEE_DESC' | translate }}</p>
-          </div>
         </div>
       </div>
     </div>

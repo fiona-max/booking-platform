@@ -1,54 +1,54 @@
 @if (success()) {
-  <div class="py-20 bg-gray-50 dark:bg-zinc-950 min-h-screen flex items-center justify-center">
+  <div class="py-20 bg-light-custom min-h-screen flex items-center justify-center">
     <div class="container mx-auto px-6 max-w-2xl">
-      <div class="bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl p-12 text-center border border-zinc-100 dark:border-zinc-800 relative overflow-hidden">
+      <div class="card-custom rounded-3xl shadow-2xl p-12 text-center border border-custom relative overflow-hidden">
         <div class="absolute top-0 right-0 w-32 h-32 bg-primary-custom/5 rounded-full -mr-16 -mt-16"></div>
         <div class="absolute bottom-0 left-0 w-32 h-32 bg-secondary-custom/5 rounded-full -ml-16 -mb-16"></div>
 
         <div class="w-24 h-24 bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
           <lucide-icon name="check-circle" class="w-12 h-12"></lucide-icon>
         </div>
-        <h2 class="text-4xl font-black text-zinc-900 dark:text-zinc-100 mb-4 tracking-tight">{{ 'BOOKING.CONFIRMED' | translate }}</h2>
-        <p class="text-zinc-500 dark:text-zinc-400 mb-10 text-lg font-medium">{{ 'BOOKING.SUCCESS_DESC' | translate }}</p>
+        <h2 class="text-4xl font-black text-custom-dark mb-4 tracking-tight">{{ 'BOOKING.CONFIRMED' | translate }}</h2>
+        <p class="text-custom-muted mb-10 text-lg font-medium">{{ 'BOOKING.SUCCESS_DESC' | translate }}</p>
 
         @if (bookingResponse()) {
-          <div class="bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl p-8 text-left mb-10 border border-zinc-100 dark:border-zinc-700">
-            <h4 class="font-bold text-zinc-400 uppercase text-xs tracking-widest mb-4">{{ 'BOOKING.REFERENCE' | translate }}</h4>
-            <div class="flex items-center justify-between p-5 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm">
-              <span class="text-zinc-400 font-bold">PNR:</span>
+          <div class="bg-light-custom rounded-2xl p-8 text-left mb-10 border border-custom">
+            <h4 class="font-bold text-custom-muted uppercase text-xs tracking-widest mb-4">{{ 'BOOKING.REFERENCE' | translate }}</h4>
+            <div class="flex items-center justify-between p-5 card-custom rounded-xl border border-custom shadow-sm">
+              <span class="text-custom-muted font-bold">PNR:</span>
               <span class="text-2xl font-mono font-black text-primary-custom tracking-tighter">{{ bookingResponse().associatedRecords[0].reference }}</span>
             </div>
           </div>
         }
 
-        <button (click)="reset()" class="w-full sm:w-auto px-12 py-4 bg-primary-custom text-white rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20">
+        <button (click)="reset()" class="w-full sm:w-auto px-12 py-4 btn-primary-custom rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20">
           {{ 'BOOKING.BACK_TO_SEARCH' | translate }}
         </button>
       </div>
     </div>
   </div>
 } @else {
-  <main class="min-h-screen bg-gray-50 dark:bg-zinc-950 pt-10 pb-20 antialiased" [formGroup]="form">
+  <main class="vh-100 overflow-hidden bg-light-custom pt-10 pb-20 antialiased" [formGroup]="form">
 
     <div class="container mx-auto px-6 max-w-5xl">
 
       <!-- Header -->
       <div class="mb-12">
-        <h1 class="text-4xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight mb-2">{{ 'BOOKING.COMPLETE_BOOKING' | translate }}</h1>
-        <p class="text-zinc-500 dark:text-zinc-400 font-medium">{{ 'BOOKING.COMPLETE_DESC' | translate }}</p>
+        <h1 class="text-4xl font-black text-custom-dark tracking-tight mb-2">{{ 'BOOKING.COMPLETE_BOOKING' | translate }}</h1>
+        <p class="text-custom-muted font-medium">{{ 'BOOKING.COMPLETE_DESC' | translate }}</p>
       </div>
 
       <!-- Progress -->
-      <div class="mb-10 bg-white dark:bg-zinc-900 rounded-2xl p-6 shadow-soft border border-zinc-100 dark:border-zinc-800">
+      <div class="mb-10 card-custom rounded-2xl p-6 shadow-soft border border-custom">
         <div class="flex justify-between items-end mb-4">
           <div>
             <p class="text-xs font-bold text-primary-custom uppercase tracking-widest">{{ 'BOOKING.STEP' | translate }} 2 {{ 'BOOKING.OF' | translate }} 3</p>
-            <h3 class="text-lg font-bold text-zinc-900 dark:text-zinc-100">{{ 'BOOKING.PASSENGER_PAYMENT' | translate }}</h3>
+            <h3 class="text-lg font-bold text-custom-dark">{{ 'BOOKING.PASSENGER_PAYMENT' | translate }}</h3>
           </div>
-          <p class="text-sm font-bold text-zinc-400">66% {{ 'BOOKING.COMPLETE_PERCENT' | translate }}</p>
+          <p class="text-sm font-bold text-custom-muted">66% {{ 'BOOKING.COMPLETE_PERCENT' | translate }}</p>
         </div>
 
-        <div class="h-2 w-full rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
+        <div class="h-2 w-full rounded-full bg-light-custom border border-custom overflow-hidden">
           <div class="h-2 rounded-full bg-primary-custom w-2/3 transition-all duration-1000"></div>
         </div>
       </div>
@@ -60,84 +60,111 @@
         </div>
       }
 
-      <div class="grid grid-cols-1 gap-10 lg:grid-cols-3">
+      <div class="grid grid-cols-1 gap-10 lg:grid-cols-3 items-start">
 
         <!-- LEFT: Form Sections -->
-        <div class="space-y-10 lg:col-span-2">
+        <div class="space-y-10 lg:col-span-2 overflow-y-auto custom-scrollbar px-1" style="max-height: calc(100vh - 140px);">
 
           <!-- Traveller Details -->
-          <section class="bg-white dark:bg-zinc-900 rounded-2xl p-8 shadow-soft border border-zinc-100 dark:border-zinc-800">
+          <section class="card-custom rounded-2xl p-8 shadow-soft border border-custom">
             <div class="flex items-center gap-4 mb-8">
               <div class="w-10 h-10 rounded-xl bg-primary-custom/10 text-primary-custom flex items-center justify-center">
                 <lucide-icon name="user" class="w-5 h-5"></lucide-icon>
               </div>
-              <h2 class="text-2xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">{{ 'BOOKING.TRAVELLER_DETAILS' | translate }}</h2>
+              <h2 class="text-2xl font-black text-custom-dark tracking-tight">{{ 'BOOKING.TRAVELLER_DETAILS' | translate }}</h2>
             </div>
 
             <div class="grid grid-cols-1 gap-8 sm:grid-cols-2">
 
               <div class="relative">
-                <label class="label-accent">{{ 'BOOKING.FIRST_NAME' | translate }}</label>
-                <input formControlName="firstName" placeholder="e.g. John" class="input-field" />
+                <label class="label-accent text-custom-muted">{{ 'BOOKING.FIRST_NAME' | translate }}</label>
+                <input formControlName="firstName" placeholder="e.g. John" class="input-field bg-light-custom text-custom-dark border-custom" />
               </div>
 
               <div class="relative">
-                <label class="label-accent">{{ 'BOOKING.LAST_NAME' | translate }}</label>
-                <input formControlName="lastName" placeholder="e.g. Doe" class="input-field" />
+                <label class="label-accent text-custom-muted">{{ 'BOOKING.LAST_NAME' | translate }}</label>
+                <input formControlName="lastName" placeholder="e.g. Doe" class="input-field bg-light-custom text-custom-dark border-custom" />
               </div>
 
               <div class="relative sm:col-span-2">
-                <label class="label-accent">{{ 'BOOKING.EMAIL' | translate }}</label>
-                <input formControlName="email" type="email" placeholder="john.doe@example.com" class="input-field" />
+                <label class="label-accent text-custom-muted">{{ 'BOOKING.EMAIL' | translate }}</label>
+                <input formControlName="email" type="email" placeholder="john.doe@example.com" class="input-field bg-light-custom text-custom-dark border-custom" />
               </div>
 
               <div class="relative sm:col-span-2">
-                <label class="label-accent">{{ 'BOOKING.PHONE' | translate }}</label>
-                <input formControlName="phone" type="tel" placeholder="+1 (555) 000-0000" class="input-field" />
+                <label class="label-accent text-custom-muted">{{ 'BOOKING.PHONE' | translate }}</label>
+                <input formControlName="phone" type="tel" placeholder="+1 (555) 000-0000" class="input-field bg-light-custom text-custom-dark border-custom" />
               </div>
 
             </div>
           </section>
 
+          <!-- Passport Details -->
+          <section class="card-custom rounded-2xl p-8 shadow-soft border border-custom">
+            <div class="flex items-center gap-4 mb-8">
+              <div class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 flex items-center justify-center">
+                <lucide-icon name="contact" class="w-5 h-5"></lucide-icon>
+              </div>
+              <h2 class="text-2xl font-black text-custom-dark tracking-tight">{{ 'BOOKING.PASSPORT_DETAILS' | translate }}</h2>
+            </div>
+
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2">
+              <div class="relative sm:col-span-2">
+                <label class="label-accent text-custom-muted">{{ 'BOOKING.NAME_ON_PASSPORT' | translate }}</label>
+                <input formControlName="passportName" placeholder="Full name as on passport" class="input-field bg-light-custom text-custom-dark border-custom" />
+              </div>
+
+              <div class="relative">
+                <label class="label-accent text-custom-muted">{{ 'BOOKING.PASSPORT_NUMBER' | translate }}</label>
+                <input formControlName="passportNumber" placeholder="Passport Number" class="input-field bg-light-custom text-custom-dark border-custom" />
+              </div>
+
+              <div class="relative">
+                <label class="label-accent text-custom-muted">{{ 'BOOKING.PASSPORT_EXPIRY' | translate }}</label>
+                <input formControlName="passportExpiry" type="date" class="input-field bg-light-custom text-custom-dark border-custom" />
+              </div>
+            </div>
+          </section>
+
           <!-- Payment Details -->
-          <section class="bg-white dark:bg-zinc-900 rounded-2xl p-8 shadow-soft border border-zinc-100 dark:border-zinc-800">
+          <section class="card-custom rounded-2xl p-8 shadow-soft border border-custom">
             <div class="flex items-center gap-4 mb-8">
               <div class="w-10 h-10 rounded-xl bg-secondary-custom/10 text-secondary-custom flex items-center justify-center">
                 <lucide-icon name="credit-card" class="w-5 h-5"></lucide-icon>
               </div>
-              <h2 class="text-2xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">{{ 'BOOKING.PAYMENT_METHOD' | translate }}</h2>
+              <h2 class="text-2xl font-black text-custom-dark tracking-tight">{{ 'BOOKING.PAYMENT_METHOD' | translate }}</h2>
             </div>
 
             <div class="space-y-8">
 
               <div class="relative">
-                <label class="label-accent">{{ 'BOOKING.CARD_NUMBER' | translate }}</label>
+                <label class="label-accent text-custom-muted">{{ 'BOOKING.CARD_NUMBER' | translate }}</label>
                 <div class="relative">
-                  <lucide-icon name="credit-card" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 w-5 h-5"></lucide-icon>
-                  <input formControlName="cardNumber" placeholder="0000 0000 0000 0000" class="input-field pl-12" />
+                  <lucide-icon name="credit-card" class="absolute left-4 top-1/2 -translate-y-1/2 text-custom-muted w-5 h-5"></lucide-icon>
+                  <input formControlName="cardNumber" placeholder="0000 0000 0000 0000" class="input-field pl-12 bg-light-custom text-custom-dark border-custom" />
                 </div>
               </div>
 
               <div class="relative">
-                <label class="label-accent">{{ 'BOOKING.CARDHOLDER_NAME' | translate }}</label>
-                <input formControlName="cardholderName" placeholder="Name as on card" class="input-field" />
+                <label class="label-accent text-custom-muted">{{ 'BOOKING.CARDHOLDER_NAME' | translate }}</label>
+                <input formControlName="cardholderName" placeholder="Name as on card" class="input-field bg-light-custom text-custom-dark border-custom" />
               </div>
 
               <div class="grid grid-cols-2 gap-8">
                 <div class="relative">
-                  <label class="label-accent">{{ 'BOOKING.EXPIRY_DATE' | translate }}</label>
-                  <input formControlName="expiryDate" placeholder="MM / YY" class="input-field" />
+                  <label class="label-accent text-custom-muted">{{ 'BOOKING.EXPIRY_DATE' | translate }}</label>
+                  <input formControlName="expiryDate" placeholder="MM / YY" class="input-field bg-light-custom text-custom-dark border-custom" />
                 </div>
 
                 <div class="relative">
-                  <label class="label-accent">{{ 'BOOKING.CVV' | translate }}</label>
-                  <input formControlName="cvv" type="password" maxlength="4" placeholder="***" class="input-field" />
+                  <label class="label-accent text-custom-muted">{{ 'BOOKING.CVV' | translate }}</label>
+                  <input formControlName="cvv" type="password" maxlength="4" placeholder="***" class="input-field bg-light-custom text-custom-dark border-custom" />
                 </div>
               </div>
 
             </div>
 
-            <div class="mt-8 flex items-center gap-2 text-xs text-zinc-400 font-medium">
+            <div class="mt-8 flex items-center gap-2 text-xs text-custom-muted font-medium">
               <lucide-icon name="shield-check" class="w-4 h-4 text-green-500"></lucide-icon>
               {{ 'BOOKING.ENCRYPTED_SECURE' | translate }}
             </div>
@@ -146,53 +173,55 @@
         </div>
 
         <!-- RIGHT: Summary Sidebar -->
-        <aside class="lg:col-span-1">
+        <aside class="lg:col-span-1 relative">
           <div class="sticky top-28 space-y-6">
-            <div class="bg-white dark:bg-zinc-900 rounded-2xl p-8 shadow-2xl border border-zinc-100 dark:border-zinc-800 relative overflow-hidden">
+            <div class="card-custom rounded-2xl p-8 shadow-2xl border border-custom relative overflow-hidden">
               <div class="absolute top-0 right-0 w-24 h-24 bg-primary-custom/5 rounded-full -mr-12 -mt-12"></div>
 
-              <h3 class="text-xl font-black text-zinc-900 dark:text-zinc-100 mb-6 tracking-tight flex items-center justify-between">
+              <h3 class="text-xl font-black text-custom-dark mb-6 tracking-tight flex items-center justify-between">
                 {{ 'BOOKING.ORDER_SUMMARY' | translate }}
-                <lucide-icon name="receipt" class="w-5 h-5 text-zinc-300"></lucide-icon>
+                <div class="w-10 h-10 rounded-lg bg-light-custom border border-custom flex items-center justify-center overflow-hidden">
+                  <img *ngIf="selectedFlight()" [src]="getAirlineLogoUrl(selectedFlight()!.validatingAirlineCodes[0])" [alt]="getAirlineName(selectedFlight()!.validatingAirlineCodes[0])" class="w-full h-full object-contain p-1">
+                </div>
               </h3>
 
               <div class="space-y-4">
-                <div class="flex justify-between items-center py-3 border-b border-zinc-50 dark:border-zinc-800">
-                  <span class="text-sm font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{{ 'BOOKING.DESTINATION' | translate }}</span>
+                <div class="flex justify-between items-center py-3 border-b border-custom">
+                  <span class="text-sm font-bold text-custom-muted uppercase tracking-widest text-[10px]">{{ 'BOOKING.DESTINATION' | translate }}</span>
                   <span class="font-black text-primary-custom">{{ bookingSummary().destination }}</span>
                 </div>
 
-                <div class="flex justify-between items-center py-3 border-b border-zinc-50 dark:border-zinc-800">
-                  <span class="text-sm font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{{ 'BOOKING.DEPARTURE' | translate }}</span>
-                  <span class="font-bold text-zinc-700 dark:text-zinc-200">{{ bookingSummary().departure }}</span>
+                <div class="flex justify-between items-center py-3 border-b border-custom">
+                  <span class="text-sm font-bold text-custom-muted uppercase tracking-widest text-[10px]">{{ 'BOOKING.DEPARTURE' | translate }}</span>
+                  <span class="font-bold text-custom-dark">{{ bookingSummary().departure }}</span>
                 </div>
 
-                <div class="flex justify-between items-center py-3 border-b border-zinc-50 dark:border-zinc-800">
-                  <span class="text-sm font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{{ 'BOOKING.RETURN' | translate }}</span>
-                  <span class="font-bold text-zinc-700 dark:text-zinc-200">{{ bookingSummary().returnDate }}</span>
+                <div class="flex justify-between items-center py-3 border-b border-custom">
+                  <span class="text-sm font-bold text-custom-muted uppercase tracking-widest text-[10px]">{{ 'BOOKING.RETURN' | translate }}</span>
+                  <span class="font-bold text-custom-dark">{{ bookingSummary().returnDate }}</span>
                 </div>
 
                 <div class="flex justify-between items-center py-3">
-                  <span class="text-sm font-bold text-zinc-400 uppercase tracking-widest text-[10px]">{{ 'BOOKING.TRAVELLERS' | translate }}</span>
-                  <span class="font-bold text-zinc-700 dark:text-zinc-200">{{ bookingSummary().travellers }} {{ 'FLIGHT_RESULTS.ADULT' | translate }}</span>
+                  <span class="text-sm font-bold text-custom-muted uppercase tracking-widest text-[10px]">{{ 'BOOKING.TRAVELLERS' | translate }}</span>
+                  <span class="font-bold text-custom-dark">{{ bookingSummary().travellers }} {{ 'FLIGHT_RESULTS.ADULT' | translate }}</span>
                 </div>
               </div>
 
-              <div class="my-8 p-6 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl border border-zinc-100 dark:border-zinc-700">
+              <div class="my-8 p-6 bg-light-custom rounded-xl border border-custom">
                 <div class="flex justify-between items-center mb-1">
-                  <span class="font-bold text-zinc-400 text-xs uppercase">{{ 'BOOKING.TOTAL_AMOUNT' | translate }}</span>
+                  <span class="font-bold text-custom-muted text-xs uppercase">{{ 'BOOKING.TOTAL_AMOUNT' | translate }}</span>
                 </div>
                 <div class="flex items-baseline gap-1">
-                  <span class="text-sm font-black text-secondary-custom">$</span>
+                  <span class="text-sm font-black text-secondary-custom">{{ userCurrency() }}</span>
                   <span class="text-4xl font-black text-secondary-custom tracking-tighter">
-                    {{ bookingSummary().total }}
+                    {{ bookingSummary().convertedTotal | number:'1.2-2' }}
                   </span>
                 </div>
               </div>
 
               <button (click)="submit()"
                 [disabled]="loading() || form.invalid"
-                class="w-full bg-primary-custom text-white py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:grayscale disabled:active:scale-100 flex items-center justify-center gap-3">
+                class="w-full btn-primary-custom py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:grayscale disabled:active:scale-100 flex items-center justify-center gap-3">
                 @if (loading()) {
                   <span class="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
                   {{ 'BOOKING.PROCESSING' | translate }}

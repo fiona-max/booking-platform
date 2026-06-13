@@ -1,12 +1,31 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, catchError, map, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocationService {
   private readonly http = inject(HttpClient);
+
+  // Globally shared location and currency state
+  selectedCurrency = signal<string>('USD');
+  selectedLocation = signal<string>('Detecting...');
+
+  // Cache for exchange rates: { baseCurrency: { targetCurrency: rate } }
+  private exchangeRates = signal<Record<string, Record<string, number>>>({});
+
+  constructor() {
+    // Try to restore from localStorage
+    const savedCurrency = localStorage.getItem('selectedCurrency');
+    if (savedCurrency) {
+      this.selectedCurrency.set(savedCurrency);
+    }
+    const savedLocation = localStorage.getItem('selectedLocation');
+    if (savedLocation) {
+      this.selectedLocation.set(savedLocation);
+    }
+  }
 
   // Fallback map of country codes to currencies
   private readonly countryCurrencyMap: { [key: string]: string } = {
@@ -28,7 +47,83 @@ export class LocationService {
         country: data?.country_name || 'United States',
         city: data?.city || 'New York'
       })),
-      catchError(() => of({ currency: 'USD', country: 'United States', city: 'New York' }))
+      tap(data => {
+        const savedCurrency = localStorage.getItem('selectedCurrency');
+        if (!savedCurrency) {
+          this.selectedCurrency.set(data.currency);
+        }
+        const savedLocation = localStorage.getItem('selectedLocation');
+        if (!savedLocation) {
+          this.selectedLocation.set(`${data.city}, ${data.country}`);
+        }
+      }),
+      catchError(() => {
+        const fallback = { currency: 'USD', country: 'United States', city: 'New York' };
+        this.selectedCurrency.set(fallback.currency);
+        this.selectedLocation.set(`${fallback.city}, ${fallback.country}`);
+        return of(fallback);
+      })
+    );
+  }
+
+  updateCurrency(currency: string) {
+    this.selectedCurrency.set(currency);
+    localStorage.setItem('selectedCurrency', currency);
+  }
+
+  /**
+   * Fetches exchange rates for a given base currency.
+   */
+  fetchExchangeRates(baseCurrency: string): Observable<Record<string, number>> {
+    const cached = this.exchangeRates()[baseCurrency];
+    if (cached) {
+      return of(cached);
+    }
+
+    // Using fawazahmed0/exchange-api (latest)
+    const url = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${baseCurrency.toLowerCase()}.json`;
+    const fallbackUrl = `https://latest.currency-api.pages.dev/v1/currencies/${baseCurrency.toLowerCase()}.json`;
+
+    return this.http.get<any>(url).pipe(
+      map(data => data[baseCurrency.toLowerCase()]),
+      tap(rates => {
+        this.exchangeRates.update(prev => ({ ...prev, [baseCurrency]: rates }));
+      }),
+      catchError(() => {
+        // Try fallback
+        return this.http.get<any>(fallbackUrl).pipe(
+          map(data => data[baseCurrency.toLowerCase()]),
+          tap(rates => {
+            this.exchangeRates.update(prev => ({ ...prev, [baseCurrency]: rates }));
+          }),
+          catchError(err => {
+            console.error('Failed to fetch exchange rates', err);
+            return of({});
+          })
+        );
+      })
+    );
+  }
+
+  /**
+   * Converts an amount from one currency to another.
+   * Returns an Observable of the converted amount.
+   */
+  convertAmount(amount: number | string, fromCurrency: string, toCurrency: string): Observable<number> {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+
+    if (fromCurrency === toCurrency) {
+      return of(numAmount);
+    }
+
+    return this.fetchExchangeRates(fromCurrency).pipe(
+      map(rates => {
+        const rate = rates[toCurrency.toLowerCase()];
+        if (rate) {
+          return numAmount * rate;
+        }
+        return numAmount; // Fallback to original amount if rate not found
+      })
     );
   }
 

@@ -1,0 +1,21 @@
+/* Replaces utility classes for custom tracking/transitions not built into Bootstrap defaults */
+.tracking-wider { letter-spacing: 0.1em; }
+.tracking-widest { letter-spacing: 0.15em; }
+.w-full { width: 100%; }
+
+.shadow-sm-hover {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.shadow-sm-hover:hover {
+  border-color: #212529 !important;
+  transform: translateY(-1px);
+}
+.form-check-input:checked {
+  background-color: #212529;
+  border-color: #212529;
+}
+.btn-active {
+  background-color: #000;   /* black background */
+  color: #fff !important;   /* white text */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3); /* subtle shadow */
+}

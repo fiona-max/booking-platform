@@ -1,8 +1,9 @@
 import { Component, signal, inject, OnInit, computed } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule, NgOptimizedImage, DecimalPipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { FlightService } from '../../core/services/flight.service';
+import { LocationService } from '../../core/services/location.service';
 import { FlightOffer, BookingRequest, Traveler } from '../../core/models/flight.model';
 import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
@@ -13,24 +14,22 @@ import { LucideAngularModule } from 'lucide-angular';
 @Component({
   selector: 'app-booking',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule, RouterModule, NgOptimizedImage, LucideAngularModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, RouterModule, NgOptimizedImage, LucideAngularModule, DecimalPipe],
   templateUrl: './booking.component.html',
   styles: [`
-    @reference "../../../styles.scss";
-    .input-field {
-      @apply w-full h-12 px-4 rounded-lg bg-white/90 border border-gray-200 focus:ring-2 focus:ring-primary outline-none transition-all dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100;
-    }
-    .label-accent {
-      @apply absolute -top-3 left-3 bg-white px-1 text-xs text-text-light font-semibold dark:bg-zinc-900 dark:text-zinc-400;
-    }
+
   `]
 })
 export class BookingComponent implements OnInit {
   private readonly flightService = inject(FlightService);
+  private readonly locationService = inject(LocationService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
-  // State signals
+  // Globally shared currency
+  userCurrency = computed(() => this.locationService.selectedCurrency());
+  exchangeRate = signal<number>(1);
+
   selectedFlight = signal<FlightOffer | null>(null);
   bookingResponse = signal<any>(null);
   loading = signal(false);
@@ -43,6 +42,9 @@ export class BookingComponent implements OnInit {
     lastName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     phone: ['', Validators.required],
+    passportNumber: ['', Validators.required],
+    passportExpiry: ['', Validators.required],
+    passportName: ['', Validators.required],
     cardNumber: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]],
     cardholderName: ['', Validators.required],
     expiryDate: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)]],
@@ -68,7 +70,8 @@ export class BookingComponent implements OnInit {
       departure: new Date(departure).toLocaleDateString(),
       returnDate: returnDate !== 'N/A' ? new Date(returnDate).toLocaleDateString() : 'N/A',
       travellers: flight.travelerPricings.length,
-      total: flight.price.total
+      total: parseFloat(flight.price.total),
+      convertedTotal: parseFloat(flight.price.total) * this.exchangeRate()
     };
   });
 
@@ -76,10 +79,56 @@ export class BookingComponent implements OnInit {
     const flight = this.flightService.getSelectedFlight();
     if (flight) {
       this.selectedFlight.set(flight);
+      this.updateExchangeRate(flight.price.currency, this.locationService.selectedCurrency());
     } else {
       // Redirect to home if no flight is selected
       this.router.navigate(['/']);
     }
+  }
+
+  private updateExchangeRate(from: string, to: string) {
+    this.locationService.convertAmount(1, from, to).subscribe(rate => {
+      this.exchangeRate.set(rate);
+    });
+  }
+
+  // Map of airline codes to full names
+  private readonly airlineNames: { [key: string]: string } = {
+    'VY': 'Vueling',
+    'IB': 'Iberia',
+    'AF': 'Air France',
+    'DY': 'Norwegian Air',
+    'UX': 'Air Europa',
+    'BA': 'British Airways',
+    'LH': 'Lufthansa',
+    'FR': 'Ryanair',
+    'U2': 'EasyJet',
+    'TK': 'Turkish Airlines',
+    'EK': 'Emirates',
+    'QR': 'Qatar Airways',
+    'AA': 'American Airlines',
+    'DL': 'Delta Air Lines',
+    'UA': 'United Airlines',
+    'TP': 'TAP Air Portugal',
+    'KL': 'KLM',
+    'AZ': 'ITA Airways',
+    'SN': 'Brussels Airlines',
+    'OS': 'Austrian Airlines',
+    'LX': 'Swiss International Air Lines'
+  };
+
+  /**
+   * Returns the full name of an airline based on its code.
+   */
+  getAirlineName(code: string): string {
+    return this.airlineNames[code] || code;
+  }
+
+  /**
+   * Returns the URL for an airline logo based on its IATA code.
+   */
+  getAirlineLogoUrl(code: string): string {
+    return `https://www.gstatic.com/flights/airline_logos/70px/${code}.png`;
   }
 
   /**
@@ -113,7 +162,17 @@ export class BookingComponent implements OnInit {
             number: formValue.phone
           }
         ]
-      }
+      },
+      documents: [
+        {
+          documentType: 'PASSPORT',
+          number: formValue.passportNumber,
+          expiryDate: formValue.passportExpiry,
+          issuanceCountry: 'ES', // Placeholder
+          nationality: 'ES', // Placeholder
+          holder: true
+        }
+      ]
     };
 
     // Construct booking request

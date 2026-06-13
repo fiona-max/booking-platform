@@ -1,0 +1,157 @@
+<!--<main class="container-xl py-4">-->
+<!--  <div class="d-flex flex-col flex-md-row justify-content-between align-items-md-end mb-3 gap-3">-->
+<!--    <div>-->
+<!--      <span class="text-uppercase text-muted small fw-bold tracking-wider">DEPARTING FLIGHTS</span>-->
+<!--      <h1 class="display-6 fw-bold d-flex align-items-center gap-2 my-1">-->
+<!--        {{ origin }}-->
+<!--        <span class="fa fa-plane text-muted"></span>-->
+<!--        {{ destination }}-->
+<!--      </h1>-->
+<!--      <p class="lead text-muted mb-0 fs-6">{{ searchSummary }}</p>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--      <button class="btn btn-outline-dark  px-4 py-2-5" (click)="modifySearch()">Modify Search</button>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div [class.d-none]="!showSearchForm()" class="mb-5 animate-fade-in">-->
+<!--    <app-flight-search-form></app-flight-search-form>-->
+<!--  </div>-->
+
+<!--  <div class="row g-4">-->
+<!--    <aside class="col-md-3 d-flex flex-column gap-4">-->
+<!--      <div class="bg-light p-3 border">-->
+<!--        <h3 class="text-uppercase small fw-bold mb-3 tracking-wider text-muted">STOPS</h3>-->
+<!--        <div class="d-flex flex-column gap-2">-->
+<!--          <div class="form-check">-->
+<!--            <input class="form-check-input border-secondary" type="checkbox" id="stopNonstop"-->
+<!--                   [(ngModel)]="filters.stops.nonStop" (change)="applyFilters()">-->
+<!--            <label class="form-check-label small" for="stopNonstop">Non-stop</label>-->
+<!--          </div>-->
+<!--          <div class="form-check">-->
+<!--            <input class="form-check-input border-secondary" type="checkbox" id="stop1"-->
+<!--                   [(ngModel)]="filters.stops.oneStop" (change)="applyFilters()">-->
+<!--            <label class="form-check-label small" for="stop1">1 stop</label>-->
+<!--          </div>-->
+<!--          <div class="form-check">-->
+<!--            <input class="form-check-input border-secondary" type="checkbox" id="stop2"-->
+<!--                   [(ngModel)]="filters.stops.twoPlusStops" (change)="applyFilters()">-->
+<!--            <label class="form-check-label small" for="stop2">2+ stops</label>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="bg-light p-3 border">-->
+<!--        <h3 class="text-uppercase small fw-bold mb-3 tracking-wider text-muted">AIRLINES</h3>-->
+<!--        <div class="d-flex flex-column gap-2">-->
+<!--          <div class="form-check" *ngFor="let airline of availableAirlines; let i = index">-->
+<!--            <input class="form-check-input border-secondary" type="checkbox" [id]="'airline-' + i"-->
+<!--                   [checked]="filters.airlines.get(airline)"-->
+<!--                   (change)="toggleAirline(airline)">-->
+<!--            <label class="form-check-label small" [for]="'airline-' + [i]">-->
+<!--              {{ airline }}-->
+<!--            </label>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="bg-light p-3 border">-->
+<!--        <div class="d-flex justify-content-between align-items-center mb-3">-->
+<!--          <h3 class="text-uppercase small fw-bold tracking-wider text-muted m-0">PRICE RANGE</h3>-->
+<!--          <span class="font-monospace small fw-bold text-primary">-->
+<!--        {{ formatCurrency(filters.maxPrice) }}-->
+<!--      </span>-->
+<!--        </div>-->
+<!--        <input class="form-range" type="range" [min]="minPrice" [max]="maxPrice"-->
+<!--               [(ngModel)]="filters.maxPrice" (input)="applyFilters()">-->
+<!--        <div class="d-flex justify-content-between mt-2 font-monospace small">-->
+<!--          <span>{{ formatCurrency(minPrice) }}</span>-->
+<!--          <span>{{ formatCurrency(maxPrice) }}</span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </aside>-->
+<!--    <section class="col-md-9 d-flex flex-column gap-3">-->
+<!--      <div class="d-flex align-items-center justify-content-between border-b pb-2">-->
+<!--        <div class="d-flex gap-3">-->
+<!--          <button-->
+<!--            class="btn btn-link text-decoration-none text-primary-custom btn-sm fw-bold text-uppercase tracking-wider"-->
+<!--            [class.btn-active]="currentSort === 'cheapest'"-->
+<!--            (click)="setSort('cheapest')">-->
+<!--            CHEAPEST-->
+<!--          </button>-->
+<!--          <button-->
+<!--            class="btn btn-link text-decoration-none text-primary-custom btn-sm fw-bold text-uppercase tracking-wider"-->
+<!--            [class.btn-active]="currentSort === 'fastest'"-->
+<!--            (click)="setSort('fastest')">-->
+<!--            FASTEST-->
+<!--          </button>-->
+<!--        </div>-->
+<!--        <span class="small text-muted">{{ flightOffers.length }} flights found</span>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Dynamic Flight Cards &ndash;&gt;-->
+<!--      @for (flight of filteredOffers; track flight.id) {-->
+<!--        <div class="card border shadow-sm-hover transition-all">-->
+<!--          <div class="card-body p-4">-->
+<!--            <div class="row align-items-center g-3">-->
+
+<!--              &lt;!&ndash; Flight Info &ndash;&gt;-->
+<!--              <div class="col-md-8">-->
+<!--                <div class="d-flex align-items-center justify-content-between">-->
+<!--                  &lt;!&ndash; Departure &ndash;&gt;-->
+<!--                  <div class="text-start">-->
+<!--                    <p class="text-uppercase small text-muted mb-1 fw-bold tracking-wider" style="font-size: 11px;">-->
+<!--                      {{ flight.validatingAirlineCodes[0] }}-->
+<!--                    </p>-->
+<!--                    <h4 class="h2 fw-light mb-0">-->
+<!--                      {{ flight.itineraries[0].segments[0].departure.at | date:'HH:mm' }}-->
+<!--                    </h4>-->
+<!--                    <p class="mb-0 text-muted">{{ flight.itineraries[0].segments[0].departure.iataCode }}</p>-->
+<!--                  </div>-->
+
+<!--                  &lt;!&ndash; Duration + Stops &ndash;&gt;-->
+<!--                  <div class="d-flex flex-column align-items-center flex-grow-1 px-4">-->
+<!--                <span class="small text-muted mb-1">-->
+<!--                  {{ flight.itineraries[0].segments[0].duration }}-->
+<!--                </span>-->
+<!--                    <div class="position-relative w-full border-top border-secondary-subtle" style="height: 2px;">-->
+<!--                      <span class="fa fa-plane text-dark position-absolute top-50 start-50 translate-middle bg-white px-2 fs-6"></span>-->
+<!--                    </div>-->
+<!--                    <span class="badge bg-secondary-subtle text-dark border-0 mt-2 text-uppercase tracking-wider" style="font-size: 10px;">-->
+<!--                  @if (flight.itineraries[0].segments[0].numberOfStops === 0) {-->
+<!--                    NON-STOP-->
+<!--                  } @else {-->
+<!--                    {{ flight.itineraries[0].segments[0].numberOfStops }} STOP-->
+<!--                  }-->
+<!--                </span>-->
+<!--                  </div>-->
+
+<!--                  &lt;!&ndash; Arrival &ndash;&gt;-->
+<!--                  <div class="text-end">-->
+<!--                    <h4 class="h2 fw-light mb-0">-->
+<!--                      {{ flight.itineraries[0].segments[0].arrival.at | date:'HH:mm' }}-->
+<!--                    </h4>-->
+<!--                    <p class="mb-0 text-muted">{{ flight.itineraries[0].segments[0].arrival.iataCode }}</p>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              &lt;!&ndash; Divider &ndash;&gt;-->
+<!--              <div class="col-md-1 d-none d-md-flex justify-content-center">-->
+<!--                <div class="vr" style="height: 60px;"></div>-->
+<!--              </div>-->
+
+<!--              <div class="col-md-3 d-flex flex-row flex-md-column justify-content-between align-items-end justify-content-md-end text-end">-->
+<!--                <div>-->
+<!--                  <span class="text-uppercase text-muted small fw-bold tracking-wider" style="font-size: 10px;">FROM</span>-->
+<!--                  <p class="h2 fw-bold mb-0">{{ formatCurrency(flight?.price?.grandTotal) }}</p>-->
+<!--                </div>-->
+<!--                <button class="btn btn-outline-dark rounded-0 px-4 py-2 mt-md-2 text-uppercase fw-bold tracking-widest btn-sm"-->
+<!--                        (click)="selectFlight(flight)" [disabled]="loading()">SELECT</button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      }-->
+<!--    </section>-->
+<!--  </div>-->
+<!--</main>-->

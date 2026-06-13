@@ -85,7 +85,8 @@
     "ERROR_INVALID_RANGE": "Return date cannot be before departure date.",
     "ECONOMY": "Economy",
     "BUSINESS": "Business",
-    "FIRST_CLASS": "First Class"
+    "FIRST_CLASS": "First Class",
+    "TRAVELERS": "Travelers"
   },
   "FLIGHT_RESULTS": {
     "MODIFY_SEARCH": "Modify Search",
@@ -153,6 +154,10 @@
     "DEPARTURE": "Departure",
     "RETURN": "Return",
     "TRAVELLERS": "Travellers",
+    "PASSPORT_DETAILS": "Passport Details",
+    "PASSPORT_NUMBER": "Passport Number",
+    "PASSPORT_EXPIRY": "Passport Expiry Date",
+    "NAME_ON_PASSPORT": "Name on Passport",
     "ERROR_COMPLETE_DETAILS": "Please complete all details.",
     "ERROR_CONNECTION": "Cannot connect to the booking service. Please check if the backend is running.",
     "ERROR_CREATE_FAILED": "Failed to create booking. Please try again later."
@@ -190,6 +195,7 @@
     "SECURED_SSL": "Secured with 256-bit SSL encryption",
     "PRICE_GUARANTEE": "Best Price Guarantee",
     "PRICE_GUARANTEE_DESC": "Found a lower price? We'll match it and credit 1,000 Society Points to your account.",
-    "ERROR_NOT_AVAILABLE": "The selected flight is no longer available at this price. Please try another search."
+    "ERROR_NOT_AVAILABLE": "The selected flight is no longer available at this price. Please try another search.",
+    "BACK": "Back"
   }
 }

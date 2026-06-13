@@ -190,6 +190,7 @@
     "SECURED_SSL": "Sécurisé par chiffrement SSL 256 bits",
     "PRICE_GUARANTEE": "Meilleur prix garanti",
     "PRICE_GUARANTEE_DESC": "Vous avez trouvé moins cher ? Nous nous alignons et créditons 1 000 points Society sur votre compte.",
-    "ERROR_NOT_AVAILABLE": "Le vol sélectionné n'est plus disponible à ce prix. Veuillez essayer une autre recherche."
+    "ERROR_NOT_AVAILABLE": "Le vol sélectionné n'est plus disponible à ce prix. Veuillez essayer une autre recherche.",
+    "BACK": "Retour"
   }
 }

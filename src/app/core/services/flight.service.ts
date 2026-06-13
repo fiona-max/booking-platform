@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of, tap } from 'rxjs';
 import { FlightOffer, FlightSearchQuery, BookingRequest, BookingResponse, LocationSuggestion } from '../models/flight.model';
 import { environment } from '../../../environments/environment';
+// If it was renamed to FlightSearchParams:
 
 @Injectable({
   providedIn: 'root'

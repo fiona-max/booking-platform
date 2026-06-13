@@ -15,7 +15,7 @@ import { LucideAngularModule } from 'lucide-angular';
 })
 export class FooterComponent {
   protected address: string = "Douala, Palais Dika Akwa";
-  protected phone: string = "+640-234-326";
+  protected phoneNumber: string = "+640-234-326";
   protected currentYear: string = '' + new Date().getFullYear() + ' ';
   protected email : string = "contacts@alliance-society.com"
 }

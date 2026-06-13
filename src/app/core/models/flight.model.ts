@@ -9,6 +9,7 @@ export interface FlightOffer {
   pricingOptions?: PricingOptions;
   validatingAirlineCodes: string[];
   travelerPricings: TravelerPricing[];
+  validatingCarrier: string;
 }
 
 export interface Itinerary {
@@ -26,6 +27,8 @@ export interface Segment {
   id: string;
   numberOfStops: number;
   blacklistedInEU: boolean;
+  arrivalAirport:string;
+  departureAirport:string;
 }
 
 export interface FlightEndpoint {
@@ -73,6 +76,10 @@ export interface IncludedCheckedBags {
   quantity: number;
 }
 
+// ============================================
+// Traveler & Document Models
+// ============================================
+
 export interface Traveler {
   id: string;
   dateOfBirth: string;
@@ -85,6 +92,16 @@ export interface Traveler {
     emailAddress: string;
     phones: Phone[];
   };
+  documents?: Document[];
+}
+
+export interface Document {
+  documentType: string;
+  number: string;
+  expiryDate: string;
+  issuanceCountry: string;
+  nationality: string;
+  holder: boolean;
 }
 
 export interface Phone {
@@ -93,6 +110,10 @@ export interface Phone {
   number: string;
 }
 
+// ============================================
+// Search & Location Models
+// ============================================
+
 export interface FlightSearchQuery {
   originCode: string;
   destinationCode: string;
@@ -100,6 +121,8 @@ export interface FlightSearchQuery {
   adults: number;
   returnDate?: string;
   max?: number;
+  cabinClass?: string;
+  passengers?: number;
 }
 
 export interface LocationSuggestion {
@@ -113,6 +136,44 @@ export interface LocationSuggestion {
   subType: string;
 }
 
+// ============================================
+// Baggage & Segment Models
+// ============================================
+
+export interface BaggageInfo {
+  checked: string;
+  cabin: string;
+}
+
+export interface FlightSegment {
+  departureAirport: string;
+  departureTerminal: string | null;
+  departureTime: string | null;
+  arrivalAirport: string;
+  arrivalTerminal: string | null;
+  arrivalTime: string | null;
+  carrier: string;
+  flightNumber: string;
+  cabin: string;
+  baggage: BaggageInfo;
+}
+
+export interface FlightItinerary {
+  duration: string;
+  segments: FlightSegment[];
+}
+
+export interface FlightPrice {
+  total: number;
+  base: number;
+  tax: number;
+  currency: string;
+}
+
+// ============================================
+// Booking Models
+// ============================================
+
 export interface BookingRequest {
   flightOffer: FlightOffer;
   travelers: Traveler[];
@@ -125,6 +186,9 @@ export interface BookingResponse {
   associatedRecords: AssociatedRecord[];
   travelers: any[];
   flightOffers: FlightOffer[];
+  success?: boolean;
+  bookingId?: string;
+  details?: any;
 }
 
 export interface AssociatedRecord {

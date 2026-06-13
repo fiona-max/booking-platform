@@ -49,6 +49,7 @@ import {
   Info,
   MapPin,
   Mail,
+  Phone,
   ShieldCheck as ShieldCheckLucide
 } from 'lucide-angular';
 
@@ -115,7 +116,8 @@ export const appConfig: ApplicationConfig = {
         Star,
         Info,
         MapPin,
-        Mail
+        Mail,
+        Phone
       })
     )
   ],

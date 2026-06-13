@@ -1,43 +1,136 @@
 @import "tailwindcss";
 @import "bootstrap/dist/css/bootstrap.min.css";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 
+/* ====== Tailwind Theme Configuration ====== */
 @theme {
+  --color-brand-teal: #0d9488;
   --color-primary: #0099A8;
-  --color-secondary: #D4AF37;
-  --color-tertiary: #1C1C1C;
-  --color-highlight: #ff6b6b;
   --color-surface-light: #ffffff;
   --color-surface-dark: #1a1a1a;
-  --color-muted-light: #6b7280;
   --color-muted-dark: #9ca3af;
   --color-text-light: #4b5563;
   --color-text-dark: #111827;
 
   --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-custom: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-/* You can add global styles to this file, and also import other style files */
-
+/* ====== Global Styles ====== */
 body.dark-mode {
   --bs-body-bg: #121212;
   --bs-body-color: #f8f9fa;
-  --bs-primary: #0494a4;
+  --bs-primary: #000000;
   --bs-secondary: #6c757d;
   --bs-border-color: #333;
-  background-color: var(--bs-body-bg);
-  color: var(--bs-body-color);
 }
 
-/* small utility tweaks from original design */
+/* ====== Utility Classes ====== */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-muted-dark) transparent;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-muted-dark);
+    border-radius: 10px;
+  }
+}
+
+.transition-all {
+  transition: all 0.3s ease-in-out;
+}
+
+.fw-black {
+  font-weight: 900;
+}
+
+.x-small {
+  font-size: 0.75rem;
+}
+
+.z-index-10 {
+  z-index: 10;
+}
+
+/* Sizing Utilities */
+.h-40 { height: 40px; }
+.w-40 { width: 40px; }
+
+.size-16 {
+  width: 16px;
+  height: 16px;
+}
+
+.size-20 {
+  width: 20px;
+  height: 20px;
+}
+
+.min-h-200 {
+  min-height: 200px;
+}
+
+/* ====== Hover Effects ====== */
+.hover-translate-y:hover {
+  transform: translateY(-8px);
+}
+
+.hover-scale:hover {
+  transform: scale(1.1);
+}
+
+.hover-bg-light:hover {
+  background-color: rgba(0, 153, 168, 0.05);
+}
+
+.hover-white:hover {
+  color: white !important;
+}
+
+/* ====== Component Utilities ====== */
+.teal-button {
+  background-color: var(--color-brand-teal);
+  transition: all 0.3s ease;
+  &:hover {
+    background-color: #0f766e;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.suggestion-item:hover {
+  background-color: rgba(13, 148, 136, 0.1);
+}
+
 .header-brand {
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
-
-.card-hero {
+.bg-img-cover {
   background-size: cover;
   background-position: center;
+}
+
+.flight-card {
+  transition: transform 0.2s ease-in-out, shadow 0.2s ease-in-out;
+}
+
+.flight-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.custom-range::-webkit-slider-thumb {
+  background: var(--primary);
 }
 

@@ -1,15 +1,15 @@
 <app-navbar-component></app-navbar-component>
 <div
-  class="d-flex align-items-center justify-content-center min-vh-100 bg-light-custom dark:bg-dark-custom"
+  class="d-flex align-items-center justify-content-center min-vh-100 bg-light-custom"
 >
   <div
-    class="w-100"
-    style="max-width: 420px; background: var(--bs-body-bg); border-radius: 0.75rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 2rem;"
+    class="card-custom w-100 shadow-lg"
+    style="max-width: 420px; border-radius: 0.75rem; padding: 2rem;"
   >
     <!-- Header -->
     <div class="text-center mb-4">
-      <h1 class="h3 fw-bold text-primary">Create Your Account</h1>
-      <p class="text-muted">Join PKP-ALLIANCE SOCIETY today!</p>
+      <h1 class="h3 fw-bold text-primary-custom">Create Your Account</h1>
+      <p class="text-custom-muted">Join PKP-ALLIANCE SOCIETY today!</p>
     </div>
 
     <!-- Signup Form -->
@@ -131,9 +131,9 @@
 
     <!-- Divider -->
     <div class="my-4 position-relative text-center">
-      <hr />
+      <hr class="border-custom" />
       <span
-        class="position-absolute top-50 start-50 translate-middle px-2 bg-white text-muted small"
+        class="position-absolute top-50 start-50 translate-middle px-2 bg-light-custom text-custom-muted small"
       >
         Or continue with
       </span>
@@ -143,7 +143,7 @@
     <button
       [disabled]="signupForm.invalid"
       type="button"
-      class="btn w-100 d-flex align-items-center justify-content-center border mb-3"
+      class="btn btn-google w-100 d-flex align-items-center justify-content-center mb-3"
     >
       <lucide-icon name="user" class="w-4 h-4 me-2"></lucide-icon>
       Sign Up with Google
@@ -151,7 +151,7 @@
 
     <!-- Login Link -->
     <div class="text-center mt-3">
-      <a [routerLink]="'/auth/login'" class="text-primary fw-medium">
+      <a [routerLink]="'/auth/login'" class="link-primary-custom fw-medium">
         Already have an account? Log in
       </a>
     </div>

@@ -1,0 +1,181 @@
+<div class="min-vh-100 bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top">
+    <div class="container">
+      <div class="d-flex align-items-center">
+        <div class="d-none d-md-flex align-items-center gap-2 ms-4 text-muted">
+          ORY <i class="fas fa-arrow-right"></i> LHR
+          <span class="mx-2">|</span>
+          24 MAY 2024
+        </div>
+      </div>
+      <button class="btn btn-primary-custom text-white d-flex align-items-center gap-1" (click)="onCancel()">
+        <i class="fas fa-times"></i> Cancel Booking
+      </button>
+    </div>
+  </nav>
+
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="mb-4">
+          <h2 class="display-6 fw-bold mt-2">Traveler Details</h2>
+          <p class="text-muted">Ensure details match the official travel documents exactly.</p>
+        </div>
+
+        <form [formGroup]="travelerForm" (ngSubmit)="onSubmit()">
+
+          @for (passenger of passengers.controls; track passenger; let i = $index) {
+            <div [formGroupName]="i" class="card mb-4 border-0 shadow-sm">
+
+              <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-3">
+                  <h5 class="mb-0">
+                    Passenger {{ i + 1 }} ({{ passenger.get('type')?.value }})
+
+                    @if (passenger.get('isPrimary')?.value) {
+                      <span class="badge bg-primary-custom ms-2">Primary</span>
+                    }
+                  </h5>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="mb-4">
+                  <label class="form-label text-uppercase text-muted small fw-semibold">Passenger Type</label>
+                  <div class="form-control bg-light">{{ passenger.get('type')?.value }}</div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                  <div class="col-md-6">
+                    <label class="form-label text-uppercase text-muted small fw-semibold">First Name</label>
+                    <input type="text" class="form-control" formControlName="firstName" placeholder="e.g. MARC">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label text-uppercase text-muted small fw-semibold">Last Name</label>
+                    <input type="text" class="form-control" formControlName="lastName" placeholder="e.g. DUBOIS">
+                  </div>
+                </div>
+
+                @if (passenger.get('type')?.value === 'Adult') {
+                  <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                      <label class="form-label text-uppercase text-muted small fw-semibold">Salutation</label>
+                      <select class="form-select" formControlName="salutation">
+                        <option value="Mr.">Mr.</option>
+                        <option value="Ms.">Ms.</option>
+                        <option value="Dr.">Dr.</option>
+                      </select>
+                    </div>
+                  </div>
+                }
+
+                <div class="row g-3 mb-4">
+                  <div class="col-md-6">
+                    <label class="form-label text-uppercase text-muted small fw-semibold">Date of Birth</label>
+                    <input type="date" class="form-control" formControlName="dateOfBirth">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label text-uppercase text-muted small fw-semibold">Gender</label>
+                    <div class="d-flex gap-3">
+                      <div class="form-check border rounded p-3 flex-fill cursor-pointer"
+                           [class.border-primary]="passenger.get('gender')?.value === 'Male'">
+                        <input class="form-check-input" type="radio" value="Male" formControlName="gender">
+                        <label class="form-check-label fw-medium">Male</label>
+                      </div>
+                      <div class="form-check border rounded p-3 flex-fill cursor-pointer"
+                           [class.border-primary]="passenger.get('gender')?.value === 'Female'">
+                        <input class="form-check-input" type="radio" value="Female" formControlName="gender">
+                        <label class="form-check-label fw-medium">Female</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                @if (passenger.get('type')?.value === 'Adult') {
+                  <div class="border-top pt-4">
+                    <h6 class="text-uppercase text-muted small fw-semibold mb-3">Passport Information</h6>
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <label class="form-label text-uppercase text-muted small fw-semibold">Passport Number</label>
+                        <input type="text" class="form-control" formControlName="passportNumber" placeholder="A00000000">
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label text-uppercase text-muted small fw-semibold">Issuing Country</label>
+                        <select class="form-select" formControlName="issuingCountry">
+                          <option value="France (FRA)">France (FRA)</option>
+                          <option value="United Kingdom (GBR)">United Kingdom (GBR)</option>
+                          <option value="United States (USA)">United States (USA)</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+
+            </div>
+          }
+
+          <button type="submit" class="btn bg-primary-custom text-white btn-lg w-100 py-3 d-flex align-items-center justify-content-center gap-2">
+            Continue to Seat Selection <i class="fas fa-arrow-right"></i>
+          </button>
+          <p class="text-center text-muted mt-3 small">By clicking continue, you agree to our Terms and Conditions.</p>
+        </form>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="position-sticky" style="top: 90px;">
+          <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+              <h6 class="text-uppercase text-muted small mb-0">Trip Summary</h6>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between mb-4">
+                <div>
+                  <div class="fs-5 fw-semibold">ORY <i class="fas fa-plane"></i> LHR</div>
+                  <div class="text-muted">AERO Flight AE-402</div>
+                  <span class="badge bg-primary-custom">PREMIUM ECONOMY</span>
+                </div>
+                <div class="text-end">
+                  <div class="fw-medium">MAY 24, 2024</div>
+                  <div class="text-muted small">08:15 — 09:30</div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center gap-3 py-3 border-top border-bottom">
+                <i class="fas fa-users fs-3"></i>
+                <div class="fw-medium">
+                  {{ passengers.controls.length }} Travelers
+                  ({{ getAdultCount() }} Adults, {{ getChildCount() }} Children)
+                </div>
+              </div>
+
+              <div class="pt-3">
+                <div class="d-flex justify-content-between text-muted mb-1">
+                  <span>Fare ({{ passengers.controls.length }} × {{ userCurrency() }} {{ (basePriceEUR * exchangeRate()).toFixed(2) }})</span>
+                  <span>{{ userCurrency() }} {{ (passengers.controls.length * basePriceEUR * exchangeRate()).toFixed(2) }}</span>
+                </div>
+                <div class="d-flex justify-content-between text-muted">
+                  <span>Taxes &amp; Fees</span>
+                  <span class="text-success">Included</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between fs-5 fw-bold">
+                  <span>Total Price</span>
+                  <span class="text-primary-custom">{{ userCurrency() }} {{ (passengers.controls.length * basePriceEUR * exchangeRate()).toFixed(2) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-info d-flex gap-3">
+            <i class="fas fa-info-circle fs-4"></i>
+            <div>
+              <strong>Passport Validity</strong>
+              <p class="small mb-0">Ensure your passport is valid for at least 6 months after your return date.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
