@@ -3,6 +3,7 @@ import {LandingPage} from './features/landing-page/landing-page';
 import {FlightResultsComponent} from './features/flight-results/flight-results.component';
 import {ValidationComponent} from './features/booking/validation/validation.component';
 import {FlightBookingComponent} from './features/flight-booking-component/flight-booking-component';
+// import {FlightBooking} from './features/booking/flight-booking/flight-booking';
 
 export const routes: Routes = [
   // Home / Landing Page (Search)
@@ -19,6 +20,8 @@ export const routes: Routes = [
 
   // Booking Page (Passenger Details)
   { path: 'booking', component: FlightBookingComponent },
+  { path: 'booking/:adults/:children', component: FlightBookingComponent },
+  { path: 'booking/:origin/:destination/:date/:adults/:children', component: FlightBookingComponent },
 
   // Auth routes (standalone components)
   {

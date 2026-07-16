@@ -1,251 +1,438 @@
-@if (success()) {
-  <div class="py-20 bg-light-custom min-h-screen flex items-center justify-center">
-    <div class="container mx-auto px-6 max-w-2xl">
-      <div class="card-custom rounded-3xl shadow-2xl p-12 text-center border border-custom relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-32 h-32 bg-primary-custom/5 rounded-full -mr-16 -mt-16"></div>
-        <div class="absolute bottom-0 left-0 w-32 h-32 bg-secondary-custom/5 rounded-full -ml-16 -mb-16"></div>
+<!--@if (success()) {-->
+<!--  <div class="py-20 bg-light-custom min-h-screen flex items-center justify-center">-->
+<!--    <div class="container mx-auto px-6 max-w-2xl">-->
+<!--      <div class="card-custom rounded-3xl shadow-2xl p-12 text-center border border-custom relative overflow-hidden">-->
+<!--        <div class="absolute top-0 right-0 w-32 h-32 bg-primary-custom/5 rounded-full -mr-16 -mt-16"></div>-->
+<!--        <div class="absolute bottom-0 left-0 w-32 h-32 bg-secondary-custom/5 rounded-full -ml-16 -mb-16"></div>-->
 
-        <div class="w-24 h-24 bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
-          <lucide-icon name="check-circle" class="w-12 h-12"></lucide-icon>
-        </div>
-        <h2 class="text-4xl font-black text-custom-dark mb-4 tracking-tight">{{ 'BOOKING.CONFIRMED' | translate }}</h2>
-        <p class="text-custom-muted mb-10 text-lg font-medium">{{ 'BOOKING.SUCCESS_DESC' | translate }}</p>
+<!--        <div class="w-24 h-24 bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">-->
+<!--          <span class="fa fa-circle-check w-5 h-5"></span>-->
+<!--        </div>-->
+<!--        <h2 class="text-4xl font-black text-custom-dark mb-4 tracking-tight">{{ 'BOOKING.CONFIRMED' | translate }}</h2>-->
+<!--        <p class="text-custom-muted mb-10 text-lg font-medium">{{ 'BOOKING.SUCCESS_DESC' | translate }}</p>-->
 
-        @if (bookingResponse()) {
-          <div class="bg-light-custom rounded-2xl p-8 text-left mb-10 border border-custom">
-            <h4 class="font-bold text-custom-muted uppercase text-xs tracking-widest mb-4">{{ 'BOOKING.REFERENCE' | translate }}</h4>
-            <div class="flex items-center justify-between p-5 card-custom rounded-xl border border-custom shadow-sm">
-              <span class="text-custom-muted font-bold">PNR:</span>
-              <span class="text-2xl font-mono font-black text-primary-custom tracking-tighter">{{ bookingResponse().associatedRecords[0].reference }}</span>
-            </div>
-          </div>
-        }
+<!--        @if (bookingResponse()) {-->
+<!--          <div class="bg-light-custom rounded-2xl p-8 text-left mb-10 border border-custom">-->
+<!--            <h4 class="font-bold text-custom-muted uppercase text-xs tracking-widest mb-4">{{ 'BOOKING.REFERENCE' | translate }}</h4>-->
+<!--            <div class="flex items-center justify-between p-5 card-custom rounded-xl border border-custom shadow-sm">-->
+<!--              <span class="text-custom-muted font-bold">PNR:</span>-->
+<!--              <span class="text-2xl font-mono font-black text-primary-custom tracking-tighter">{{ bookingResponse().associatedRecords[0].reference }}</span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        }-->
 
-        <button (click)="reset()" class="w-full sm:w-auto px-12 py-4 btn-primary-custom rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20">
-          {{ 'BOOKING.BACK_TO_SEARCH' | translate }}
-        </button>
-      </div>
-    </div>
-  </div>
-} @else {
-  <main class="vh-100 overflow-hidden bg-light-custom pt-10 pb-20 antialiased" [formGroup]="form">
+<!--        <button (click)="reset()" class="w-full sm:w-auto px-12 py-4 btn-primary-custom rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20">-->
+<!--          {{ 'BOOKING.BACK_TO_SEARCH' | translate }}-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--} @else {-->
+<!--  <main class="vh-100 overflow-hidden bg-light-custom pt-10 pb-20 antialiased" [formGroup]="form">-->
 
-    <div class="container mx-auto px-6 max-w-5xl">
+<!--    <div class="container mx-auto px-6 max-w-5xl">-->
 
-      <!-- Header -->
-      <div class="mb-12">
-        <h1 class="text-4xl font-black text-custom-dark tracking-tight mb-2">{{ 'BOOKING.COMPLETE_BOOKING' | translate }}</h1>
-        <p class="text-custom-muted font-medium">{{ 'BOOKING.COMPLETE_DESC' | translate }}</p>
-      </div>
+<!--      &lt;!&ndash; Header &ndash;&gt;-->
+<!--      <div class="mb-12">-->
+<!--        <h1 class="text-4xl font-black text-custom-dark tracking-tight mb-2">{{ 'BOOKING.COMPLETE_BOOKING' | translate }}</h1>-->
+<!--        <p class="text-custom-muted font-medium">{{ 'BOOKING.COMPLETE_DESC' | translate }}</p>-->
+<!--      </div>-->
 
-      <!-- Progress -->
-      <div class="mb-10 card-custom rounded-2xl p-6 shadow-soft border border-custom">
-        <div class="flex justify-between items-end mb-4">
-          <div>
-            <p class="text-xs font-bold text-primary-custom uppercase tracking-widest">{{ 'BOOKING.STEP' | translate }} 2 {{ 'BOOKING.OF' | translate }} 3</p>
-            <h3 class="text-lg font-bold text-custom-dark">{{ 'BOOKING.PASSENGER_PAYMENT' | translate }}</h3>
-          </div>
-          <p class="text-sm font-bold text-custom-muted">66% {{ 'BOOKING.COMPLETE_PERCENT' | translate }}</p>
-        </div>
+<!--      &lt;!&ndash; Progress &ndash;&gt;-->
+<!--      <div class="mb-10 card-custom rounded-2xl p-6 shadow-soft border border-custom">-->
+<!--        <div class="flex justify-between items-end mb-4">-->
+<!--          <div>-->
+<!--            <p class="text-xs font-bold text-primary-custom uppercase tracking-widest">{{ 'BOOKING.STEP' | translate }} 2 {{ 'BOOKING.OF' | translate }} 3</p>-->
+<!--            <h3 class="text-lg font-bold text-custom-dark">{{ 'BOOKING.PASSENGER_PAYMENT' | translate }}</h3>-->
+<!--          </div>-->
+<!--          <p class="text-sm font-bold text-custom-muted">66% {{ 'BOOKING.COMPLETE_PERCENT' | translate }}</p>-->
+<!--        </div>-->
 
-        <div class="h-2 w-full rounded-full bg-light-custom border border-custom overflow-hidden">
-          <div class="h-2 rounded-full bg-primary-custom w-2/3 transition-all duration-1000"></div>
-        </div>
-      </div>
+<!--        <div class="h-2 w-full rounded-full bg-light-custom border border-custom overflow-hidden">-->
+<!--          <div class="h-2 rounded-full bg-primary-custom w-2/3 transition-all duration-1000"></div>-->
+<!--        </div>-->
+<!--      </div>-->
 
-      @if (error()) {
-        <div class="mb-8 p-5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-2xl flex items-center gap-4 animate-pulse">
-          <lucide-icon name="triangle-alert" class="w-5 h-5"></lucide-icon>
-          <span class="font-bold text-sm">{{ error() }}</span>
-        </div>
-      }
+<!--      @if (error()) {-->
+<!--        <div class="mb-8 p-5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-2xl flex items-center gap-4 animate-pulse">-->
+<!--          <lucide-icon name="triangle-alert" class="w-5 h-5"></lucide-icon>-->
+<!--          <span class="font-bold text-sm">{{ error() }}</span>-->
+<!--        </div>-->
+<!--      }-->
 
-      <div class="grid grid-cols-1 gap-10 lg:grid-cols-3 items-start">
+<!--      <div class="grid grid-cols-1 gap-10 lg:grid-cols-3 items-start">-->
 
-        <!-- LEFT: Form Sections -->
-        <div class="space-y-10 lg:col-span-2 overflow-y-auto custom-scrollbar px-1" style="max-height: calc(100vh - 140px);">
+<!--        &lt;!&ndash; LEFT: Form Sections &ndash;&gt;-->
+<!--        <div class="space-y-10 lg:col-span-2 overflow-y-auto custom-scrollbar px-1" style="max-height: calc(100vh - 140px);">-->
 
-          <!-- Traveller Details -->
-          <section class="card-custom rounded-2xl p-8 shadow-soft border border-custom">
-            <div class="flex items-center gap-4 mb-8">
-              <div class="w-10 h-10 rounded-xl bg-primary-custom/10 text-primary-custom flex items-center justify-center">
-                <lucide-icon name="user" class="w-5 h-5"></lucide-icon>
-              </div>
-              <h2 class="text-2xl font-black text-custom-dark tracking-tight">{{ 'BOOKING.TRAVELLER_DETAILS' | translate }}</h2>
-            </div>
+<!--          &lt;!&ndash; Traveller Details &ndash;&gt;-->
+<!--          <section class="card-custom rounded-3xl p-10 shadow-lg border border-gray-200 bg-white">-->
 
-            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2">
+<!--            &lt;!&ndash; Header &ndash;&gt;-->
+<!--            <div class="flex items-center gap-4 mb-10">-->
+<!--              <div class="w-12 h-12 rounded-2xl bg-primary-custom/10 text-primary-custom flex items-center justify-center">-->
+<!--                <lucide-icon name="user" class="w-6 h-6"></lucide-icon>-->
+<!--              </div>-->
+<!--              <h2 class="text-3xl font-bold text-gray-900 tracking-tight">-->
+<!--                {{ 'BOOKING.TRAVELLER_DETAILS' | translate }}-->
+<!--              </h2>-->
+<!--            </div>-->
 
-              <div class="relative">
-                <label class="label-accent text-custom-muted">{{ 'BOOKING.FIRST_NAME' | translate }}</label>
-                <input formControlName="firstName" placeholder="e.g. John" class="input-field bg-light-custom text-custom-dark border-custom" />
-              </div>
+<!--            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">-->
 
-              <div class="relative">
-                <label class="label-accent text-custom-muted">{{ 'BOOKING.LAST_NAME' | translate }}</label>
-                <input formControlName="lastName" placeholder="e.g. Doe" class="input-field bg-light-custom text-custom-dark border-custom" />
-              </div>
+<!--              &lt;!&ndash; FIRST NAME &ndash;&gt;-->
+<!--              <div class="relative">-->
+<!--                <label class="block text-sm font-medium mb-1 text-gray-600">-->
+<!--                  {{ 'BOOKING.FIRST_NAME' | translate }}-->
+<!--                </label>-->
 
-              <div class="relative sm:col-span-2">
-                <label class="label-accent text-custom-muted">{{ 'BOOKING.EMAIL' | translate }}</label>
-                <input formControlName="email" type="email" placeholder="john.doe@example.com" class="input-field bg-light-custom text-custom-dark border-custom" />
-              </div>
+<!--                <div class="relative">-->
+<!--                  <input-->
+<!--                    formControlName="firstName"-->
+<!--                    type="text"-->
+<!--                    autocomplete="given-name"-->
+<!--                    placeholder="John"-->
+<!--                    class="input-field pl-10"-->
+<!--                    [class.border-red-500]="form.get('firstName')?.invalid && form.get('firstName')?.touched"-->
+<!--                  />-->
 
-              <div class="relative sm:col-span-2">
-                <label class="label-accent text-custom-muted">{{ 'BOOKING.PHONE' | translate }}</label>
-                <input formControlName="phone" type="tel" placeholder="+1 (555) 000-0000" class="input-field bg-light-custom text-custom-dark border-custom" />
-              </div>
+<!--                  <lucide-icon name="user" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></lucide-icon>-->
+<!--                </div>-->
 
-            </div>
-          </section>
+<!--                @if (form.get('firstName')?.invalid && form.get('firstName')?.touched) {-->
+<!--                  <p class="text-red-500 text-xs mt-1">{{ 'BOOKING.REQUIRED_FIELD' | translate }}</p>-->
+<!--                }-->
+<!--              </div>-->
 
-          <!-- Passport Details -->
-          <section class="card-custom rounded-2xl p-8 shadow-soft border border-custom">
-            <div class="flex items-center gap-4 mb-8">
-              <div class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 flex items-center justify-center">
-                <lucide-icon name="contact" class="w-5 h-5"></lucide-icon>
-              </div>
-              <h2 class="text-2xl font-black text-custom-dark tracking-tight">{{ 'BOOKING.PASSPORT_DETAILS' | translate }}</h2>
-            </div>
 
-            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2">
-              <div class="relative sm:col-span-2">
-                <label class="label-accent text-custom-muted">{{ 'BOOKING.NAME_ON_PASSPORT' | translate }}</label>
-                <input formControlName="passportName" placeholder="Full name as on passport" class="input-field bg-light-custom text-custom-dark border-custom" />
-              </div>
+<!--              &lt;!&ndash; LAST NAME &ndash;&gt;-->
+<!--              <div class="relative">-->
+<!--                <label class="block text-sm font-medium mb-1 text-gray-600">-->
+<!--                  {{ 'BOOKING.LAST_NAME' | translate }}-->
+<!--                </label>-->
 
-              <div class="relative">
-                <label class="label-accent text-custom-muted">{{ 'BOOKING.PASSPORT_NUMBER' | translate }}</label>
-                <input formControlName="passportNumber" placeholder="Passport Number" class="input-field bg-light-custom text-custom-dark border-custom" />
-              </div>
+<!--                <div class="relative">-->
+<!--                  <input-->
+<!--                    formControlName="lastName"-->
+<!--                    type="text"-->
+<!--                    autocomplete="family-name"-->
+<!--                    placeholder="Doe"-->
+<!--                    class="input-field pl-10"-->
+<!--                    [class.border-red-500]="form.get('lastName')?.invalid && form.get('lastName')?.touched"-->
+<!--                  />-->
 
-              <div class="relative">
-                <label class="label-accent text-custom-muted">{{ 'BOOKING.PASSPORT_EXPIRY' | translate }}</label>
-                <input formControlName="passportExpiry" type="date" class="input-field bg-light-custom text-custom-dark border-custom" />
-              </div>
-            </div>
-          </section>
+<!--                  <lucide-icon name="user" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></lucide-icon>-->
+<!--                </div>-->
 
-          <!-- Payment Details -->
-          <section class="card-custom rounded-2xl p-8 shadow-soft border border-custom">
-            <div class="flex items-center gap-4 mb-8">
-              <div class="w-10 h-10 rounded-xl bg-secondary-custom/10 text-secondary-custom flex items-center justify-center">
-                <lucide-icon name="credit-card" class="w-5 h-5"></lucide-icon>
-              </div>
-              <h2 class="text-2xl font-black text-custom-dark tracking-tight">{{ 'BOOKING.PAYMENT_METHOD' | translate }}</h2>
-            </div>
+<!--                @if (form.get('lastName')?.invalid && form.get('lastName')?.touched) {-->
+<!--                  <p class="text-red-500 text-xs mt-1">{{ 'BOOKING.REQUIRED_FIELD' | translate }}</p>-->
+<!--                }-->
+<!--              </div>-->
 
-            <div class="space-y-8">
 
-              <div class="relative">
-                <label class="label-accent text-custom-muted">{{ 'BOOKING.CARD_NUMBER' | translate }}</label>
-                <div class="relative">
-                  <lucide-icon name="credit-card" class="absolute left-4 top-1/2 -translate-y-1/2 text-custom-muted w-5 h-5"></lucide-icon>
-                  <input formControlName="cardNumber" placeholder="0000 0000 0000 0000" class="input-field pl-12 bg-light-custom text-custom-dark border-custom" />
-                </div>
-              </div>
+<!--              &lt;!&ndash; GENDER &ndash;&gt;-->
+<!--              <div>-->
+<!--                <label class="block text-sm font-medium mb-1 text-gray-600">-->
+<!--                  {{ 'BOOKING.GENDER' | translate }}-->
+<!--                </label>-->
 
-              <div class="relative">
-                <label class="label-accent text-custom-muted">{{ 'BOOKING.CARDHOLDER_NAME' | translate }}</label>
-                <input formControlName="cardholderName" placeholder="Name as on card" class="input-field bg-light-custom text-custom-dark border-custom" />
-              </div>
+<!--                <div class="relative">-->
+<!--                  <select-->
+<!--                    formControlName="gender"-->
+<!--                    class="pr-10"-->
+<!--                    [class.border-red-500]="form.get('gender')?.invalid && form.get('gender')?.touched"-->
+<!--                  >-->
+<!--                    <option value="">{{ 'BOOKING.SELECT_GENDER' | translate }}</option>-->
+<!--                    <option value="MALE">{{ 'BOOKING.MALE' | translate }}</option>-->
+<!--                    <option value="FEMALE">{{ 'BOOKING.FEMALE' | translate }}</option>-->
+<!--                    <option value="OTHER">{{ 'BOOKING.OTHER' | translate }}</option>-->
+<!--                  </select>-->
 
-              <div class="grid grid-cols-2 gap-8">
-                <div class="relative">
-                  <label class="label-accent text-custom-muted">{{ 'BOOKING.EXPIRY_DATE' | translate }}</label>
-                  <input formControlName="expiryDate" placeholder="MM / YY" class="input-field bg-light-custom text-custom-dark border-custom" />
-                </div>
+<!--                  <lucide-icon name="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></lucide-icon>-->
+<!--                </div>-->
 
-                <div class="relative">
-                  <label class="label-accent text-custom-muted">{{ 'BOOKING.CVV' | translate }}</label>
-                  <input formControlName="cvv" type="password" maxlength="4" placeholder="***" class="input-field bg-light-custom text-custom-dark border-custom" />
-                </div>
-              </div>
+<!--                @if (form.get('gender')?.invalid && form.get('gender')?.touched) {-->
+<!--                  <p class="text-red-500 text-xs mt-1">{{ 'BOOKING.REQUIRED_FIELD' | translate }}</p>-->
+<!--                }-->
+<!--              </div>-->
 
-            </div>
 
-            <div class="mt-8 flex items-center gap-2 text-xs text-custom-muted font-medium">
-              <lucide-icon name="shield-check" class="w-4 h-4 text-green-500"></lucide-icon>
-              {{ 'BOOKING.ENCRYPTED_SECURE' | translate }}
-            </div>
-          </section>
+<!--              &lt;!&ndash; COUNTRY &ndash;&gt;-->
+<!--              <div>-->
+<!--                <label class="block text-sm font-medium mb-1 text-gray-600">-->
+<!--                  {{ 'BOOKING.COUNTRY' | translate }}-->
+<!--                </label>-->
 
-        </div>
+<!--                <div class="relative">-->
+<!--                  <select-->
+<!--                    formControlName="country"-->
+<!--                    class="input-field appearance-none pr-10"-->
+<!--                    [class.border-red-500]="form.get('country')?.invalid && form.get('country')?.touched"-->
+<!--                  >-->
+<!--                    <option value="">{{ 'BOOKING.SELECT_COUNTRY' | translate }}</option>-->
+<!--                    @for (country of countries(); track country.cca2) {-->
+<!--                      <option [value]="country.cca2">{{ country.name.common }}</option>-->
+<!--                    }-->
+<!--                  </select>-->
 
-        <!-- RIGHT: Summary Sidebar -->
-        <aside class="lg:col-span-1 relative">
-          <div class="sticky top-28 space-y-6">
-            <div class="card-custom rounded-2xl p-8 shadow-2xl border border-custom relative overflow-hidden">
-              <div class="absolute top-0 right-0 w-24 h-24 bg-primary-custom/5 rounded-full -mr-12 -mt-12"></div>
+<!--                  <lucide-icon name="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></lucide-icon>-->
+<!--                </div>-->
 
-              <h3 class="text-xl font-black text-custom-dark mb-6 tracking-tight flex items-center justify-between">
-                {{ 'BOOKING.ORDER_SUMMARY' | translate }}
-                <div class="w-10 h-10 rounded-lg bg-light-custom border border-custom flex items-center justify-center overflow-hidden">
-                  <img *ngIf="selectedFlight()" [src]="getAirlineLogoUrl(selectedFlight()!.validatingAirlineCodes[0])" [alt]="getAirlineName(selectedFlight()!.validatingAirlineCodes[0])" class="w-full h-full object-contain p-1">
-                </div>
-              </h3>
+<!--                @if (form.get('country')?.invalid && form.get('country')?.touched) {-->
+<!--                  <p class="text-red-500 text-xs mt-1">{{ 'BOOKING.REQUIRED_FIELD' | translate }}</p>-->
+<!--                }-->
+<!--              </div>-->
 
-              <div class="space-y-4">
-                <div class="flex justify-between items-center py-3 border-b border-custom">
-                  <span class="text-sm font-bold text-custom-muted uppercase tracking-widest text-[10px]">{{ 'BOOKING.DESTINATION' | translate }}</span>
-                  <span class="font-black text-primary-custom">{{ bookingSummary().destination }}</span>
-                </div>
 
-                <div class="flex justify-between items-center py-3 border-b border-custom">
-                  <span class="text-sm font-bold text-custom-muted uppercase tracking-widest text-[10px]">{{ 'BOOKING.DEPARTURE' | translate }}</span>
-                  <span class="font-bold text-custom-dark">{{ bookingSummary().departure }}</span>
-                </div>
+<!--              &lt;!&ndash; EMAIL &ndash;&gt;-->
+<!--              <div class="sm:col-span-2">-->
+<!--                <label class="block text-sm font-medium mb-1 text-gray-600">-->
+<!--                  {{ 'BOOKING.EMAIL' | translate }}-->
+<!--                </label>-->
 
-                <div class="flex justify-between items-center py-3 border-b border-custom">
-                  <span class="text-sm font-bold text-custom-muted uppercase tracking-widest text-[10px]">{{ 'BOOKING.RETURN' | translate }}</span>
-                  <span class="font-bold text-custom-dark">{{ bookingSummary().returnDate }}</span>
-                </div>
+<!--                <div class="relative">-->
+<!--                  <input-->
+<!--                    formControlName="email"-->
+<!--                    type="email"-->
+<!--                    autocomplete="email"-->
+<!--                    placeholder="john.doe@example.com"-->
+<!--                    class="input-field pl-10"-->
+<!--                    [class.border-red-500]="form.get('email')?.invalid && form.get('email')?.touched"-->
+<!--                  />-->
 
-                <div class="flex justify-between items-center py-3">
-                  <span class="text-sm font-bold text-custom-muted uppercase tracking-widest text-[10px]">{{ 'BOOKING.TRAVELLERS' | translate }}</span>
-                  <span class="font-bold text-custom-dark">{{ bookingSummary().travellers }} {{ 'FLIGHT_RESULTS.ADULT' | translate }}</span>
-                </div>
-              </div>
+<!--                  <lucide-icon name="mail" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></lucide-icon>-->
+<!--                </div>-->
 
-              <div class="my-8 p-6 bg-light-custom rounded-xl border border-custom">
-                <div class="flex justify-between items-center mb-1">
-                  <span class="font-bold text-custom-muted text-xs uppercase">{{ 'BOOKING.TOTAL_AMOUNT' | translate }}</span>
-                </div>
-                <div class="flex items-baseline gap-1">
-                  <span class="text-sm font-black text-secondary-custom">{{ userCurrency() }}</span>
-                  <span class="text-4xl font-black text-secondary-custom tracking-tighter">
-                    {{ bookingSummary().convertedTotal | number:'1.2-2' }}
-                  </span>
-                </div>
-              </div>
+<!--                @if (form.get('email')?.invalid && form.get('email')?.touched) {-->
+<!--                  <p class="text-red-500 text-xs mt-1">-->
+<!--                    @if (form.get('email')?.errors?.['required']) {-->
+<!--                      {{ 'BOOKING.REQUIRED_FIELD' | translate }}-->
+<!--                    }-->
+<!--                    @else if (form.get('email')?.errors?.['email']) {-->
+<!--                      {{ 'BOOKING.INVALID_EMAIL' | translate }}-->
+<!--                    }-->
+<!--                  </p>-->
+<!--                }-->
+<!--              </div>-->
 
-              <button (click)="submit()"
-                [disabled]="loading() || form.invalid"
-                class="w-full btn-primary-custom py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:grayscale disabled:active:scale-100 flex items-center justify-center gap-3">
-                @if (loading()) {
-                  <span class="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
-                  {{ 'BOOKING.PROCESSING' | translate }}
-                } @else {
-                  <lucide-icon name="plane" class="w-5 h-5"></lucide-icon>
-                  {{ 'BOOKING.CONFIRM_BOOKING' | translate }}
-                }
-              </button>
 
-              <p class="mt-4 text-[10px] text-center text-zinc-400 font-medium px-4">
-                {{ 'BOOKING.TERMS_AGREEMENT' | translate }}
-              </p>
-            </div>
+<!--              &lt;!&ndash; PHONE &ndash;&gt;-->
+<!--              <div class="sm:col-span-2">-->
+<!--                <label class="block text-sm font-medium mb-1 text-gray-600">-->
+<!--                  {{ 'BOOKING.PHONE' | translate }}-->
+<!--                </label>-->
 
-            <!-- Trust Badges -->
-            <div class="flex items-center justify-center gap-6 opacity-40 grayscale">
-              <lucide-icon name="circle-check" class="w-6 h-6"></lucide-icon>
-              <lucide-icon name="shield-alert" class="w-6 h-6"></lucide-icon>
-              <lucide-icon name="credit-card" class="w-6 h-6"></lucide-icon>
-            </div>
-          </div>
-        </aside>
+<!--                <div class="relative">-->
+<!--                  <input-->
+<!--                    formControlName="phone"-->
+<!--                    type="tel"-->
+<!--                    autocomplete="tel"-->
+<!--                    placeholder="+237 6XX XXX XXX"-->
+<!--                    class="input-field pl-10"-->
+<!--                    [class.border-red-500]="form.get('phone')?.invalid && form.get('phone')?.touched"-->
+<!--                  />-->
 
-      </div>
-    </div>
-  </main>
-}
+<!--                  <lucide-icon name="phone" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></lucide-icon>-->
+<!--                </div>-->
+
+<!--                @if (form.get('phone')?.invalid && form.get('phone')?.touched) {-->
+<!--                  <p class="text-red-500 text-xs mt-1">{{ 'BOOKING.REQUIRED_FIELD' | translate }}</p>-->
+<!--                }-->
+<!--              </div>-->
+
+<!--            </div>-->
+<!--          </section>-->
+<!--          &lt;!&ndash; Passport Details &ndash;&gt;-->
+<!--          <section class="card-custom rounded-2xl p-8 shadow-soft border border-custom">-->
+<!--            <div class="flex items-center gap-4 mb-8">-->
+<!--              <div class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 flex items-center justify-center">-->
+<!--                <lucide-icon name="contact" class="w-5 h-5"></lucide-icon>-->
+<!--              </div>-->
+<!--              <h2 class="text-2xl font-black text-custom-dark tracking-tight">{{ 'BOOKING.PASSPORT_DETAILS' | translate }}</h2>-->
+<!--            </div>-->
+
+<!--            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2">-->
+<!--              <div class="relative sm:col-span-2">-->
+<!--                <label class="label-accent text-custom-muted">{{ 'BOOKING.NAME_ON_PASSPORT' | translate }}</label>-->
+<!--                <input formControlName="passportName" placeholder="Full name as on passport" class="input-field bg-light-custom text-custom-dark border-custom" [class.border-red-500]="form.get('passportName')?.invalid && form.get('passportName')?.touched" />-->
+<!--                @if (form.get('passportName')?.invalid && form.get('passportName')?.touched) {-->
+<!--                  <p class="text-red-500 text-xs mt-1">{{ 'BOOKING.REQUIRED_FIELD' | translate }}</p>-->
+<!--                }-->
+<!--              </div>-->
+
+<!--              <div class="relative">-->
+<!--                <label class="label-accent text-custom-muted">{{ 'BOOKING.PASSPORT_NUMBER' | translate }}</label>-->
+<!--                <input formControlName="passportNumber" placeholder="Passport Number" class="input-field bg-light-custom text-custom-dark border-custom" [class.border-red-500]="form.get('passportNumber')?.invalid && form.get('passportNumber')?.touched" />-->
+<!--                @if (form.get('passportNumber')?.invalid && form.get('passportNumber')?.touched) {-->
+<!--                  <p class="text-red-500 text-xs mt-1">{{ 'BOOKING.REQUIRED_FIELD' | translate }}</p>-->
+<!--                }-->
+<!--              </div>-->
+
+<!--              <div class="relative">-->
+<!--                <label class="label-accent text-custom-muted">{{ 'BOOKING.PASSPORT_EXPIRY' | translate }}</label>-->
+<!--                <input formControlName="passportExpiry" type="date" class="input-field bg-light-custom text-custom-dark border-custom" [class.border-red-500]="form.get('passportExpiry')?.invalid && form.get('passportExpiry')?.touched" />-->
+<!--                @if (form.get('passportExpiry')?.invalid && form.get('passportExpiry')?.touched) {-->
+<!--                  <p class="text-red-500 text-xs mt-1">{{ 'BOOKING.REQUIRED_FIELD' | translate }}</p>-->
+<!--                }-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </section>-->
+
+<!--          &lt;!&ndash; Payment Details &ndash;&gt;-->
+<!--          <section class="card-custom rounded-2xl p-8 shadow-soft border border-custom">-->
+<!--            <div class="flex items-center gap-4 mb-8">-->
+<!--              <div class="w-10 h-10 rounded-xl bg-secondary-custom/10 text-secondary-custom flex items-center justify-center">-->
+<!--                <lucide-icon name="credit-card" class="w-5 h-5"></lucide-icon>-->
+<!--              </div>-->
+<!--              <h2 class="text-2xl font-black text-custom-dark tracking-tight">{{ 'BOOKING.PAYMENT_METHOD' | translate }}</h2>-->
+<!--            </div>-->
+
+<!--            <div class="space-y-8">-->
+
+<!--              <div class="relative">-->
+<!--                <label class="label-accent text-custom-muted">{{ 'BOOKING.CARD_NUMBER' | translate }}</label>-->
+<!--                <div class="relative">-->
+<!--                  <lucide-icon name="credit-card" class="absolute left-4 top-1/2 -translate-y-1/2 text-custom-muted w-5 h-5"></lucide-icon>-->
+<!--                  <input formControlName="cardNumber" placeholder="0000 0000 0000 0000" class="input-field pl-12 bg-light-custom text-custom-dark border-custom" [class.border-red-500]="form.get('cardNumber')?.invalid && form.get('cardNumber')?.touched" />-->
+<!--                </div>-->
+<!--                @if (form.get('cardNumber')?.invalid && form.get('cardNumber')?.touched) {-->
+<!--                  <p class="text-red-500 text-xs mt-1">-->
+<!--                    @if (form.get('cardNumber')?.errors?.['required']) { {{ 'BOOKING.REQUIRED_FIELD' | translate }} }-->
+<!--                    @else if (form.get('cardNumber')?.errors?.['pattern']) { {{ 'BOOKING.INVALID_CARD_NUMBER' | translate }} }-->
+<!--                  </p>-->
+<!--                }-->
+<!--              </div>-->
+
+<!--              <div class="relative">-->
+<!--                <label class="label-accent text-custom-muted">{{ 'BOOKING.CARDHOLDER_NAME' | translate }}</label>-->
+<!--                <input formControlName="cardholderName" placeholder="Name as on card" class="input-field bg-light-custom text-custom-dark border-custom" [class.border-red-500]="form.get('cardholderName')?.invalid && form.get('cardholderName')?.touched" />-->
+<!--                @if (form.get('cardholderName')?.invalid && form.get('cardholderName')?.touched) {-->
+<!--                  <p class="text-red-500 text-xs mt-1">{{ 'BOOKING.REQUIRED_FIELD' | translate }}</p>-->
+<!--                }-->
+<!--              </div>-->
+
+<!--              <div class="grid grid-cols-2 gap-8">-->
+<!--                <div class="relative">-->
+<!--                  <label class="label-accent text-custom-muted">{{ 'BOOKING.EXPIRY_DATE' | translate }}</label>-->
+<!--                  <input formControlName="expiryDate" placeholder="MM / YY" class="input-field bg-light-custom text-custom-dark border-custom" [class.border-red-500]="form.get('expiryDate')?.invalid && form.get('expiryDate')?.touched" />-->
+<!--                  @if (form.get('expiryDate')?.invalid && form.get('expiryDate')?.touched) {-->
+<!--                    <p class="text-red-500 text-xs mt-1">-->
+<!--                      @if (form.get('expiryDate')?.errors?.['required']) { {{ 'BOOKING.REQUIRED_FIELD' | translate }} }-->
+<!--                      @else if (form.get('expiryDate')?.errors?.['pattern']) { {{ 'BOOKING.INVALID_EXPIRY_DATE' | translate }} }-->
+<!--                    </p>-->
+<!--                  }-->
+<!--                </div>-->
+
+<!--                <div class="relative">-->
+<!--                  <label class="label-accent text-custom-muted">{{ 'BOOKING.CVV' | translate }}</label>-->
+<!--                  <input formControlName="cvv" type="password" maxlength="4" placeholder="***" class="input-field bg-light-custom text-custom-dark border-custom" [class.border-red-500]="form.get('cvv')?.invalid && form.get('cvv')?.touched" />-->
+<!--                  @if (form.get('cvv')?.invalid && form.get('cvv')?.touched) {-->
+<!--                    <p class="text-red-500 text-xs mt-1">-->
+<!--                      @if (form.get('cvv')?.errors?.['required']) { {{ 'BOOKING.REQUIRED_FIELD' | translate }} }-->
+<!--                      @else if (form.get('cvv')?.errors?.['pattern']) { {{ 'BOOKING.INVALID_CVV' | translate }} }-->
+<!--                    </p>-->
+<!--                  }-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--            </div>-->
+
+<!--            <div class="mt-8 flex items-center gap-2 text-xs text-custom-muted font-medium">-->
+<!--              <lucide-icon name="shield-check" class="w-4 h-4 text-green-500"></lucide-icon>-->
+<!--              {{ 'BOOKING.ENCRYPTED_SECURE' | translate }}-->
+<!--            </div>-->
+<!--          </section>-->
+
+<!--        </div>-->
+
+<!--        &lt;!&ndash; RIGHT: Summary Sidebar &ndash;&gt;-->
+<!--        <aside class="lg:col-span-1 relative">-->
+<!--          <div class="sticky top-28 space-y-6">-->
+<!--            <div class="card-custom rounded-2xl p-8 shadow-2xl border border-custom relative overflow-hidden">-->
+<!--              <div class="absolute top-0 right-0 w-24 h-24 bg-primary-custom/5 rounded-full -mr-12 -mt-12"></div>-->
+
+<!--              <h3 class="text-xl font-black text-custom-dark mb-6 tracking-tight flex items-center justify-between">-->
+<!--                {{ 'BOOKING.ORDER_SUMMARY' | translate }}-->
+<!--                <div class="w-10 h-10 rounded-lg bg-light-custom border border-custom flex items-center justify-center overflow-hidden">-->
+<!--                  <img *ngIf="selectedFlight()" [src]="getAirlineLogoUrl(selectedFlight()!.validatingAirlineCodes[0])" [alt]="getAirlineName(selectedFlight()!.validatingAirlineCodes[0])" class="w-full h-full object-contain p-1">-->
+<!--                </div>-->
+<!--              </h3>-->
+
+<!--              <div class="space-y-4">-->
+<!--                <div class="flex justify-between items-center py-3 border-b border-custom">-->
+<!--                  <span class="text-sm font-bold text-custom-muted uppercase tracking-widest text-[10px]">{{ 'BOOKING.DESTINATION' | translate }}</span>-->
+<!--                  <span class="font-black text-primary-custom">{{ bookingSummary().destination }}</span>-->
+<!--                </div>-->
+
+<!--                <div class="flex justify-between items-center py-3 border-b border-custom">-->
+<!--                  <span class="text-sm font-bold text-custom-muted uppercase tracking-widest text-[10px]">{{ 'BOOKING.DEPARTURE' | translate }}</span>-->
+<!--                  <span class="font-bold text-custom-dark">{{ bookingSummary().departure }}</span>-->
+<!--                </div>-->
+
+<!--                <div class="flex justify-between items-center py-3 border-b border-custom">-->
+<!--                  <span class="text-sm font-bold text-custom-muted uppercase tracking-widest text-[10px]">{{ 'BOOKING.RETURN' | translate }}</span>-->
+<!--                  <span class="font-bold text-custom-dark">{{ bookingSummary().returnDate }}</span>-->
+<!--                </div>-->
+
+<!--                <div class="flex justify-between items-center py-3">-->
+<!--                  <span class="text-sm font-bold text-custom-muted uppercase tracking-widest text-[10px]">{{ 'BOOKING.TRAVELLERS' | translate }}</span>-->
+<!--                  <span class="font-bold text-custom-dark">{{ bookingSummary().travellers }} {{ 'FLIGHT_RESULTS.ADULT' | translate }}</span>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div class="my-8 p-6 bg-light-custom rounded-xl border border-custom">-->
+<!--                <div class="flex justify-between items-center mb-1">-->
+<!--                  <span class="font-bold text-custom-muted text-xs uppercase">{{ 'BOOKING.TOTAL_AMOUNT' | translate }}</span>-->
+<!--                </div>-->
+<!--                <div class="flex items-baseline gap-1">-->
+<!--                  <span class="text-sm font-black text-secondary-custom">{{ userCurrency() }}</span>-->
+<!--                  <span class="text-4xl font-black text-secondary-custom tracking-tighter">-->
+<!--                    {{ bookingSummary().convertedTotal | number:'1.2-2' }}-->
+<!--                  </span>-->
+<!--                </div>-->
+<!--                @if (bookingSummary().originalCurrency !== userCurrency()) {-->
+<!--                  <div class="mt-2 pt-2 border-t border-custom/50 flex justify-between items-center">-->
+<!--                    <span class="text-[10px] font-bold text-custom-muted uppercase tracking-wider">{{ 'BOOKING.ORIGINAL_PRICE' | translate }}</span>-->
+<!--                    <span class="text-xs font-bold text-custom-muted">-->
+<!--                      {{ bookingSummary().originalCurrency }} {{ bookingSummary().total | number:'1.2-2' }}-->
+<!--                    </span>-->
+<!--                  </div>-->
+<!--                  <div class="mt-1 flex justify-between items-center">-->
+<!--                    <span class="text-[10px] font-bold text-custom-muted uppercase tracking-wider">{{ 'BOOKING.EXCHANGE_RATE' | translate }}</span>-->
+<!--                    <span class="text-[10px] font-medium text-custom-muted italic">-->
+<!--                      1 {{ bookingSummary().originalCurrency }} = {{ exchangeRate() | number:'1.4-4' }} {{ userCurrency() }}-->
+<!--                    </span>-->
+<!--                  </div>-->
+<!--                }-->
+<!--              </div>-->
+
+<!--              <button (click)="submit()"-->
+<!--                [disabled]="loading() || form.invalid"-->
+<!--                class="w-full btn-primary-custom py-4 rounded-xl font-black uppercase tracking-widest text-sm hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:grayscale disabled:active:scale-100 flex items-center justify-center gap-3">-->
+<!--                @if (loading()) {-->
+<!--                  <span class="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>-->
+<!--                  {{ 'BOOKING.PROCESSING' | translate }}-->
+<!--                } @else {-->
+<!--                  <lucide-icon name="plane" class="w-5 h-5"></lucide-icon>-->
+<!--                  {{ 'BOOKING.CONFIRM_BOOKING' | translate }}-->
+<!--                }-->
+<!--              </button>-->
+
+<!--              <p class="mt-4 text-[10px] text-center text-zinc-400 font-medium px-4">-->
+<!--                {{ 'BOOKING.TERMS_AGREEMENT' | translate }}-->
+<!--              </p>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Trust Badges &ndash;&gt;-->
+<!--            <div class="flex items-center justify-center gap-6 opacity-40 grayscale">-->
+<!--              <lucide-icon name="circle-check" class="w-6 h-6"></lucide-icon>-->
+<!--              <lucide-icon name="shield-alert" class="w-6 h-6"></lucide-icon>-->
+<!--              <lucide-icon name="credit-card" class="w-6 h-6"></lucide-icon>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </aside>-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--  </main>-->
+<!--}-->

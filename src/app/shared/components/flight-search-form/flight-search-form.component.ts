@@ -9,10 +9,11 @@ import { LocationSuggestion } from '../../../core/models/flight.model';
 import { TranslateModule } from '@ngx-translate/core';
 import { debounceTime, distinctUntilChanged, Subject, switchMap, map, of } from 'rxjs';
 import { TravelSelectorComponent } from '../travel-selector-component/travel-selector-component';
+import {LogoLoaderComponent} from '../logo-loader-component/logo-loader-component';
 @Component({
   selector: 'app-flight-search-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, LucideAngularModule, TravelSelectorComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, LucideAngularModule, TravelSelectorComponent, LogoLoaderComponent],
   templateUrl: './flight-search-form.component.html',
   styleUrl: './flight-search-form.component.scss'
 })

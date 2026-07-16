@@ -1,6 +1,5 @@
 <div class="position-relative z-index-10 w-100 max-w-6xl card-custom rounded-4 p-4 shadow-custom border mx-auto" id="search-engine-box">
   <form [formGroup]="flightsForm" (ngSubmit)="submit()" class="row g-4" id="flight-search-form">
-    <!-- 1. Trip Type Selection -->
     <div class="col-12 d-flex flex-wrap gap-4 border-bottom border-custom pb-4" data-purpose="trip-type-selector">
       <div class="form-check d-flex align-items-center mb-0">
         <input type="radio" value="Round Trip" formControlName="tripType" id="roundTrip"
@@ -96,7 +95,6 @@
             </app-travel-selector-component>
           </div>
         </div>
-        <!-- 4a. Departure -->
         <div class="col-12 col-md-6 col-xl-2 position-relative">
           <label class="d-block x-small fw-bold text-muted text-uppercase mb-2 ms-1">{{ 'LANDING.DEPARTURE_DATE' | translate }}</label>
           <div class="d-flex align-items-center border border-custom rounded-3 p-2 bg-light-custom h-[52px]"
@@ -109,7 +107,6 @@
           }
         </div>
 
-        <!-- 4b. Return -->
         <div class="col-12 col-md-6 col-xl-2 position-relative">
           <label class="d-block x-small fw-bold text-muted text-uppercase mb-2 ms-1">{{ 'LANDING.RETURN_DATE' | translate }}</label>
           <div class="d-flex align-items-center border border-custom rounded-3 p-2 bg-light-custom h-[52px]"
@@ -127,7 +124,6 @@
       </div>
     </div>
 
-    <!-- Filter Fields Row -->
     <div class="col-12 pt-2">
       <div class="row align-items-end g-3">
         <div class="col-md-auto mb-3 mb-md-0 px-3">
@@ -140,7 +136,6 @@
           </div>
         </div>
 
-        <!-- Submit Button -->
         <div class="col-12 col-md d-flex align-items-end justify-content-end">
           <div class="w-100 w-md-auto">
             @if (error(); as errorMsg) {
@@ -157,13 +152,8 @@
               [style.opacity]="loading() ? '0.5' : '1'"
               [style.cursor]="loading() ? 'not-allowed' : 'pointer'"
             >
-            @if (loading()) {
-                <span class="spinner-border spinner-border-sm" role="status"></span>
-                <span>{{ 'LANDING.SEARCHING' | translate }}</span>
-              } @else {
                 <span>{{ 'LANDING.SEARCH_FLIGHTS' | translate }}</span>
                 <span class="fa fa-arrow-right"></span>
-              }
             </button>
           </div>
         </div>
@@ -171,3 +161,8 @@
     </div>
   </form>
 </div>
+@if (loading()) {
+  <app-logo-loader-component
+    [texts]="['Searching the best flights...']"
+  ></app-logo-loader-component>
+}

@@ -1,0 +1,121 @@
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+
+  /* ✅ VERY IMPORTANT: make it transparent */
+  background: rgba(248, 250, 252, 0.4);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /* ✅ BLUR EFFECT */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  z-index: 50;
+  transition: all 0.5s;
+}
+
+/* ── Logo container ── */
+.logo-container {
+  width: 12rem;   /* w-48 */
+  height: 12rem;  /* h-48 */
+  margin-bottom: 3rem; /* mb-12 */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Decorative blurred pulse behind the ring */
+.bg-pulse {
+  position: absolute;
+  inset: 0;
+  background-color: #e0f2fe;
+  border-radius: 9999px;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  opacity: 0.6;
+  filter: blur(20px);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 0.3; }
+}
+
+/* ── Orbit ring (the whole container rotates) ── */
+.orbit-ring {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Each slot is absolute + full-size, rotated by its angle, child sits at top center */
+.orbit-slot {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.orbit-img {
+  width: 4rem;   /* w-16 */
+  height: 4rem;  /* h-16 */
+  margin-top: 0.5rem; /* mt-2 */
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  mix-blend-mode: multiply;
+}
+
+/* ── Loading text ── */
+.loading-text {
+  text-align: center;
+  width: 100%;
+  max-width: 28rem; /* max-w-md */
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.heading {
+  font-size: 1.5rem;   /* text-2xl */
+  font-weight: 300;    /* font-light */
+  color: #1e293b;      /* slate-800 */
+  margin-bottom: 1rem; /* mb-4 */
+  letter-spacing: 0.05em; /* tracking-wide */
+}
+
+.subtext-wrap {
+  height: 2rem; /* h-8 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.subtext {
+  font-size: 1.125rem; /* text-lg */
+  color: #64748b;      /* slate-500 */
+  font-weight: 500;    /* font-medium */
+  letter-spacing: 0.05em; /* tracking-wide */
+  margin: 0;
+}
+
+/* ── animate-float (from index.html @keyframes) ── */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}

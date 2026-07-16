@@ -1,0 +1,37 @@
+<div
+  class="loader-overlay"
+  data-name="loader-overlay"
+  data-file="components/loader.component"
+>
+
+  <!-- Logo container -->
+  <div class="logo-container" data-name="logo-container">
+    <!-- Decorative background pulse -->
+    <div class="bg-pulse"></div>
+
+    <!-- 8 images orbiting, whole ring spins -->
+    <div class="orbit-ring">
+      @for (angle of orbitAngles; track angle){
+        <div
+          class="orbit-slot"
+          [style]="getOrbitStyle(angle)"
+        >
+          <img
+            src="https://app.trickle.so/storage/public/images/usr_20a2a303e8000001/ca262dbd-89a1-4f67-b36a-f1a26463ca8b.png"
+            alt="Airline Alliance Logo"
+            class="orbit-img"
+          />
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Loading Text -->
+  <div class="loading-text" data-name="loading-text">
+    <h2 class="heading">Hang tight</h2>
+    <div class="subtext-wrap">
+      <p class="subtext animate-float">{{ progressText }}</p>
+    </div>
+  </div>
+
+</div>

@@ -17,10 +17,10 @@ export class Airline {
 
   /**
    * Looks up airline information by IATA or ICAO codes.
-   * @param codes Comma-separated list of airline codes (e.g., 'TX,CA,VU')
+   * @param airlineCodes Comma-separated list of airline codes (e.g., 'TX,CA,VU')
    */
-  lookupAirlines(codes: string): Observable<AmadeusAirlineResponse> {
-    const params = new HttpParams().set('codes', codes);
+  lookupAirlines(airlineCodes: string): Observable<AmadeusAirlineResponse> {
+    const params = new HttpParams().set('codes', airlineCodes);
     return this.http.get<AmadeusAirlineResponse>(`${this.apiUrl}/airlines`,
       {
         params

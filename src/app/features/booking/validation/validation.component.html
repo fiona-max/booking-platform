@@ -1,9 +1,12 @@
-<div *ngIf="isLoading()" class="fixed inset-0 bg-light-custom/80 backdrop-blur-md z-[100] flex flex-col items-center justify-center">
+@if (isLoading()) {
+<div class="fixed inset-0 bg-light-custom/80 backdrop-blur-md z-[100] flex flex-col items-center justify-center">
   <div class="w-16 h-16 border-4 border-primary-custom/20 border-t-primary-custom rounded-full animate-spin mb-4"></div>
   <p class="text-primary-custom font-headline text-xl font-bold animate-pulse">{{ 'VALIDATION.VALIDATING' | translate }}</p>
 </div>
+}
 
-<div *ngIf="error()" class="fixed inset-0 bg-light-custom/95 z-[100] flex flex-col items-center justify-center p-6 text-center">
+@if (error()) {
+<div class="fixed inset-0 bg-light-custom/95 z-[100] flex flex-col items-center justify-center p-6 text-center">
   <div class="w-20 h-20 rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-6">
     <lucide-icon name="triangle-alert" class="w-10 h-10"></lucide-icon>
   </div>
@@ -13,12 +16,14 @@
     {{ 'VALIDATION.RETURN_TO_SEARCH' | translate }}
   </button>
 </div>
+}
 
-<main class="pt-32 pb-24 px-6 max-w-7xl mx-auto min-h-screen bg-light-custom" *ngIf="!isLoading() && !error() && outboundSummary() as summary">
+@if (!isLoading() && !error() && outboundSummary(); as summary) {
+<main class="pb-15 pt-15 px-6 max-w-7xl mx-auto min-h-screen bg-light-custom">
   <!-- Back Button -->
   <div class="mb-8">
-    <button (click)="goBack()" class="flex items-center gap-2 text-custom-muted hover:text-primary-custom transition-colors font-bold uppercase tracking-widest text-xs group">
-      <lucide-icon name="arrow-left" class="w-4 h-4 transition-transform group-hover:-translate-x-1"></lucide-icon>
+    <button (click)="goBack()" class="flex items-center m-2 gap-2 text-custom-muted bg-primary-custom p-2 rounded-2 text-white font-bold">
+      <span class="w-4 h-4 fa fa-arrow-left"></span>
       {{ 'VALIDATION.BACK' | translate }}
     </button>
   </div>
@@ -39,7 +44,7 @@
       <lucide-icon name="clock" class="w-8 h-8 text-[#735c00]"></lucide-icon>
       <div>
         <p class="text-xs uppercase tracking-widest font-bold text-[#735c00]">{{ 'VALIDATION.GUARANTEED_FOR' | translate }}</p>
-        <p class="text-2xl font-headline font-extrabold text-[#745c00]">{{ formattedTime() }}</p>
+        <p class="text-2xl font-headline font-extrabold text-[#745c00]">{{ lastTicketingDate() }}</p>
       </div>
     </div>
   </div>
@@ -47,14 +52,15 @@
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
     <!-- Left Column: Flight Summary -->
     <div class="lg:col-span-8 space-y-8">
-      <div class="card-custom rounded-xl shadow-sm border border-custom overflow-hidden" *ngFor="let segment of outboundSegments(); let i = index">
+      @for (segment of outboundSegments(); track $index) {
+      <div class="card-custom rounded-xl shadow-sm border border-custom overflow-hidden">
         <div class="p-8 border-b border-custom flex justify-between items-center bg-light-custom">
           <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-lg bg-light-custom border border-custom flex items-center justify-center overflow-hidden">
               <img [src]="getAirlineLogoUrl(segment.airline)" [alt]="getAirlineName(segment.airline)" class="w-full h-full object-contain p-1">
             </div>
             <div>
-              <p class="text-sm font-bold text-primary-custom uppercase tracking-tighter">{{ 'VALIDATION.SEGMENT' | translate }} {{ i + 1 }}</p>
+              <p class="text-sm font-bold text-primary-custom uppercase tracking-tighter">{{ 'VALIDATION.SEGMENT' | translate }} {{ $index + 1 }}</p>
               <p class="font-headline text-xl font-bold text-custom-dark">{{ segment.originName }} ({{ segment.origin }}) {{ 'VALIDATION.TO' | translate }} {{ segment.destinationName }} ({{ segment.destination }})</p>
             </div>
           </div>
@@ -68,18 +74,18 @@
           <div class="flex flex-col md:flex-row justify-between items-center gap-8 relative">
             <div class="flex-1 flex flex-col items-start">
               <span class="text-3xl font-headline font-extrabold text-custom-dark">{{ segment.departureTime | date:'HH:mm' }}</span>
-              <span class="text-custom-dark font-medium">{{ segment.origin }} <span *ngIf="segment.terminal" class="text-custom-muted">· {{ 'VALIDATION.TERMINAL' | translate }} {{ segment.terminal }}</span></span>
+              <span class="text-custom-dark font-medium">{{ segment.origin }} @if (segment.terminal) { <span class="text-custom-muted">· {{ 'VALIDATION.TERMINAL' | translate }} {{ segment.terminal }}</span> }</span>
               <span class="text-xs text-custom-muted mt-1 uppercase tracking-wider font-bold">{{ segment.departureTime | date:'MMM d, yyyy' }}</span>
             </div>
             <div class="flex-1 flex flex-col items-center gap-2 relative px-12">
-              <span class="text-xs text-custom-muted uppercase tracking-widest font-bold" *ngIf="segment.duration">{{ segment.duration.replace('PT', '').toLowerCase() }}</span>
+              @if (segment.duration) { <span class="text-xs text-custom-muted uppercase tracking-widest font-bold">{{ segment.duration.replace('PT', '').toLowerCase() }}</span> }
               <div class="w-full h-px bg-custom border-bottom border-custom flex items-center justify-center relative">
                 <lucide-icon name="plane" class="w-6 h-6 text-primary-custom rotate-90 bg-light-custom px-1"></lucide-icon>
               </div>
             </div>
             <div class="flex-1 flex flex-col items-end">
               <span class="text-3xl font-headline font-extrabold text-custom-dark">{{ segment.arrivalTime | date:'HH:mm' }}</span>
-              <span class="text-custom-dark font-medium">{{ segment.destination }} <span *ngIf="segment.arrivalTerminal" class="text-custom-muted">· {{ 'VALIDATION.TERMINAL' | translate }} {{ segment.arrivalTerminal }}</span></span>
+              <span class="text-custom-dark font-medium">{{ segment.destination }} @if (segment.arrivalTerminal) { <span class="text-custom-muted">· {{ 'VALIDATION.TERMINAL' | translate }} {{ segment.arrivalTerminal }}</span> }</span>
               <span class="text-xs text-custom-muted mt-1 uppercase tracking-wider font-bold">{{ segment.arrivalTime | date:'MMM d, yyyy' }}</span>
             </div>
           </div>
@@ -104,10 +110,11 @@
           </div>
         </div>
       </div>
+      }
     </div>
     <!-- Right Column: Price Breakdown -->
-    <div class="lg:col-span-4 sticky top-28 space-y-6" *ngIf= "priceSummary() as price">
-<!--    <div class="lg:col-span-4 sticky top-28 space-y-6">-->
+    @if (priceSummary(); as price) {
+    <div class="lg:col-span-4 sticky top-28 space-y-6">
       <div class="card-custom rounded-xl shadow-sm border border-custom p-8">
         <h2 class="font-headline text-xl font-extrabold mb-6 tracking-tight text-custom-dark">{{ 'VALIDATION.PRICE_SUMMARY' | translate }}</h2>
         <div class="space-y-4">
@@ -124,7 +131,7 @@
               <p class="text-sm font-bold text-primary-custom uppercase tracking-wider">{{ 'VALIDATION.TOTAL_PRICE' | translate }}</p>
               <p class="text-xs text-custom-muted">{{ 'VALIDATION.ALL_TAXES' | translate }}</p>
             </div>
-            <span class="text-3xl font-headline font-extrabold text-primary-custom">{{ userCurrency() }} {{ price.grandTotal }}</span>
+            <span class="text-xl font-headline font-extrabold text-primary-custom">{{ userCurrency() }} {{ price.grandTotal }}</span>
           </div>
         </div>
         <div class="mt-3 space-y-4">
@@ -137,5 +144,7 @@
         </div>
       </div>
     </div>
+    }
   </div>
 </main>
+}

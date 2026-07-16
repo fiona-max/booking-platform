@@ -72,6 +72,16 @@ export class LocationService {
   }
 
   /**
+   * Fetches a list of all countries.
+   */
+  getCountries(): Observable<any[]> {
+    return this.http.get<any[]>('https://restcountries.com/v3.1/all?fields=name,cca2').pipe(
+      map(countries => countries.sort((a, b) => a.name.common.localeCompare(b.name.common))),
+      catchError(() => of([]))
+    );
+  }
+
+  /**
    * Fetches exchange rates for a given base currency.
    */
   fetchExchangeRates(baseCurrency: string): Observable<Record<string, number>> {

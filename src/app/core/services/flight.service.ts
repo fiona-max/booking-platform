@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of, tap } from 'rxjs';
 import { FlightOffer, FlightSearchQuery, BookingRequest, BookingResponse, LocationSuggestion } from '../models/flight.model';
 import { environment } from '../../../environments/environment';
+import {FlightOffersPricingResponse} from '../models/FlightPricingResponse';
 // If it was renamed to FlightSearchParams:
 
 @Injectable({
@@ -15,7 +16,7 @@ export class FlightService {
 
   // Internal state to hold flight search results and selection
   private latestResults = signal<FlightOffer[]>([]);
-  private selectedFlight = signal<FlightOffer | null>(null);
+  private selectedFlight = signal<FlightOffer | null>(this.getStoredFlight());
 
   /**
    * Searches for flights based on query parameters.
@@ -46,6 +47,18 @@ export class FlightService {
     return this.http.get<FlightOffer[]>(`${this.apiUrl}/search`, { params });
   }
 
+
+  private rawFlightOffers: any[] = [];
+
+  setRawFlights(flights: any[]) {
+    this.rawFlightOffers = flights;
+  }
+
+  getRawFlights() {
+    return this.rawFlightOffers;
+  }
+
+
   /**
    * Sets the latest flight search results in the state.
    */
@@ -65,6 +78,23 @@ export class FlightService {
    */
   setSelectedFlight(flight: FlightOffer) {
     this.selectedFlight.set(flight);
+    if (flight) {
+      sessionStorage.setItem('selectedFlight', JSON.stringify(flight));
+    } else {
+      sessionStorage.removeItem('selectedFlight');
+    }
+  }
+
+  private getStoredFlight(): FlightOffer | null {
+    const stored = sessionStorage.getItem('selectedFlight');
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
   }
 
   /**
@@ -79,13 +109,21 @@ export class FlightService {
    */
   clearSelectedFlight() {
     this.selectedFlight.set(null);
+    sessionStorage.removeItem('selectedFlight');
   }
 
   /**
    * Validates pricing for a selected flight offer.
    */
   priceFlight(flightOffer: FlightOffer): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/price`, { flightOffer });
+    const payload = {
+      flightOffer,
+      data: {
+        type: 'flight-offers-pricing',
+        flightOffers: [flightOffer]
+      }
+    };
+    return this.http.post<any>(`${this.apiUrl}/validate-pricing`, payload);
   }
 
   /**
@@ -115,4 +153,16 @@ export class FlightService {
       params: { keyword }
     });
   }
+
+
+  getCountries(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/countries`);
+  }
+
+  createOrder(orderPayload: any): Observable<any>{
+    return this.http.post<any>(`${this.apiUrl}/create-order`, {
+      data: orderPayload
+    });
+  }
+
 }

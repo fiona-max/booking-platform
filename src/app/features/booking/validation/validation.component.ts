@@ -1,6 +1,6 @@
 import { Component, signal, inject, OnInit, computed, OnDestroy } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { FlightService } from '../../../core/services/flight.service';
 import { LocationService } from '../../../core/services/location.service';
 import { FlightOffer } from '../../../core/models/flight.model';
@@ -12,44 +12,32 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, RouterModule, LucideAngularModule, TranslateModule],
   templateUrl: './validation.component.html',
-  styles: [`
-    @reference "../../../../styles.scss";
-    .glass-panel {
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(20px);
-    }
-    .teal-gradient {
-        background: linear-gradient(135deg, #006670 0%, #00818E 100%);
-    }
-  `]
+  styles: []
 })
 export class ValidationComponent implements OnInit, OnDestroy {
   private readonly flightService = inject(FlightService);
   private readonly locationService = inject(LocationService);
   private readonly router = inject(Router);
   private readonly location = inject(Location);
-
+  private readonly route = inject(ActivatedRoute);
   // Globally shared currency
   userCurrency = computed(() => this.locationService.selectedCurrency());
   exchangeRate = signal<number>(1);
 
   // State signals
   selectedFlight = signal<FlightOffer | null>(null);
+  adults = signal<number>(1);
+  children = signal<number>(0);
   isLoading = signal<boolean>(true);
   error = signal<string | null>(null);
-  timeLeft = signal<number>(900); // 15 minutes in seconds
+  timeLeft = signal<number>(900);
+  lastTicketingDate = signal<string | null>(null);
   timerInterval: any;
 
-  // Computed properties for the UI
-  formattedTime = computed(() => {
-    const minutes = Math.floor(this.timeLeft() / 60);
-    const seconds = this.timeLeft() % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  });
 
   outboundSegments = computed(() => {
     const flight = this.selectedFlight();
-    if (!flight) return [];
+    if (!flight || !flight.itineraries || flight.itineraries.length === 0) return [];
 
     const firstItinerary = flight.itineraries[0];
     const travelerPricing = flight.travelerPricings?.[0];
@@ -59,16 +47,16 @@ export class ValidationComponent implements OnInit, OnDestroy {
       return {
         origin: segment.departure.iataCode,
         destination: segment.arrival.iataCode,
-        originName: segment.departure.iataCode, // Ideally we'd have names, but IATA codes for now
+        originName: segment.departure.iataCode,
         destinationName: segment.arrival.iataCode,
         departureTime: segment.departure.at,
         arrivalTime: segment.arrival.at,
         duration: segment.duration,
-        airline: segment.carrierCode || flight.validatingAirlineCodes[0] || 'Airline',
-        flightNumber: (segment.carrierCode || '') + '-' + (segment.number || ''),
-        aircraft: segment.aircraft?.code || 'Boeing 777-300ER',
+        airline: segment.carrierCode || flight.validatingAirlineCodes?.[0] || 'Airline',
+        flightNumber: (segment.carrierCode || '') + (segment.number ? '-' + segment.number : ''),
+        aircraft: segment.aircraft?.code || 'N/A',
         cabin: fareDetails?.cabin || 'ECONOMY',
-        class: fareDetails?.class || 'J',
+        class: fareDetails?.class || 'N/A',
         terminal: segment.departure.terminal,
         arrivalTerminal: segment.arrival.terminal
       };
@@ -98,63 +86,45 @@ export class ValidationComponent implements OnInit, OnDestroy {
 
   priceSummary = computed(() => {
     const flight = this.selectedFlight();
-    if (!flight) return null;
+    if (!flight || !flight.price) return null;
     const price = flight.price;
-    const base = parseFloat(price.base);
-    const total = parseFloat(price.total);
+    const base = parseFloat(price.base || '0');
+    const total = parseFloat(price.total || price.grandTotal || '0');
     const taxes = total - base;
     return {
       currency: this.userCurrency(),
       base: (base * this.exchangeRate()).toFixed(2),
       taxes: (taxes * this.exchangeRate()).toFixed(2),
-      discount: (210.00 * this.exchangeRate()).toFixed(2), // Static discount as in UI for now
-      grandTotal: ((total - 210.00) * this.exchangeRate()).toFixed(2)
+      grandTotal: (total * this.exchangeRate()).toFixed(2)
     };
   });
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['adults']) this.adults.set(parseInt(params['adults'], 10));
+      if (params['children']) this.children.set(parseInt(params['children'], 10));
+    });
+
     const flight = this.flightService.getSelectedFlight();
-    if (flight) {
-      this.isLoading.set(true);
-      this.flightService.priceFlight(flight).subscribe({
-        next: (response) => {
-          // The response from /price usually contains a flightOffer object
-          // Adjust based on actual API response structure
-          const validatedOffer = response.data?.flightOffers?.[0] || response.flightOffer || flight;
-          this.selectedFlight.set(validatedOffer);
-          this.flightService.setSelectedFlight(validatedOffer);
-          this.updateExchangeRate(validatedOffer.price.currency, this.locationService.selectedCurrency());
-          this.isLoading.set(false);
-          this.startTimer();
-        },
-        error: (err) => {
-          console.error('Pricing validation failed:', err);
-          this.error.set('VALIDATION.ERROR_NOT_AVAILABLE');
-          this.isLoading.set(false);
-          // Optional: redirect back after some time or show a button
-        }
-      });
-    } else {
+    console.log('ValidationComponent: Recovered flight:', flight);
+    if (!flight) {
+      console.warn('ValidationComponent: No flight found, redirecting to home');
       this.router.navigate(['/']);
+      return;
     }
+    this.selectedFlight.set(flight);
+    this.lastTicketingDate.set(flight.lastTicketingDate || null);
+    this.updateExchangeRate(
+      flight.price.currency,
+      this.locationService.selectedCurrency()
+    );
+    this.isLoading.set(false);
   }
 
   ngOnDestroy() {
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
     }
-  }
-
-  startTimer() {
-    this.timerInterval = setInterval(() => {
-      this.timeLeft.update(time => {
-        if (time <= 0) {
-          clearInterval(this.timerInterval);
-          return 0;
-        }
-        return time - 1;
-      });
-    }, 1000);
   }
 
   private updateExchangeRate(from: string, to: string) {
@@ -203,7 +173,19 @@ export class ValidationComponent implements OnInit, OnDestroy {
   }
 
   proceedToCheckout() {
-    this.router.navigate(['/booking']);
+    const summary = this.outboundSummary();
+    if (summary) {
+      this.router.navigate([
+        '/booking',
+        summary.origin,
+        summary.destination,
+        summary.departureTime.split('T')[0],
+        this.adults(),
+        this.children()
+      ]);
+    } else {
+      this.router.navigate(['/booking', this.adults(), this.children()]);
+    }
   }
 
   goBack() {

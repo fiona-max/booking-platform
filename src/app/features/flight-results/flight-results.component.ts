@@ -9,15 +9,12 @@ import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { FlightSearchFormComponent } from '../../shared/components/flight-search-form/flight-search-form.component';
+import {LogoLoaderComponent} from '../../shared/components/logo-loader-component/logo-loader-component';
 
-/**
- * Component to display flight search results.
- * Allows users to view available flights and proceed to booking.
- */
 @Component({
   selector: 'app-flight-results',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, LucideAngularModule, TranslateModule, FlightSearchFormComponent, DecimalPipe],
+  imports: [CommonModule, RouterModule, FormsModule, LucideAngularModule, TranslateModule, FlightSearchFormComponent, DecimalPipe, LogoLoaderComponent],
   templateUrl: './flight-results.component.html',
   styles: [`@reference "../../../styles.scss"`]
 })
@@ -222,8 +219,14 @@ export class FlightResultsComponent implements OnInit {
     }
 
     const flight = this.flights()[0];
-    // CHANGED: Fallback handles normalized fields safely
-    return flight ? flight.itineraries[0]?.segments[0]?.departureAirport : 'Origin';
+    if (flight && flight.itineraries[0]?.segments[0]) {
+      const seg = flight.itineraries[0].segments[0];
+      if (seg.departureAirport && seg.departureAirport !== seg.departure.iataCode) {
+        return `${seg.departureAirport} (${seg.departure.iataCode})`;
+      }
+      return seg.departure.iataCode;
+    }
+    return 'Origin';
   });
 
   destination = computed(() => {
@@ -238,10 +241,15 @@ export class FlightResultsComponent implements OnInit {
 
     const flight = this.flights()[0];
     if (!flight) return 'Destination';
-    // CHANGED: Fallback targets new property mappings
     const segments = flight.itineraries[0]?.segments || [];
     const lastSeg = segments[segments.length - 1];
-    return lastSeg ? lastSeg.arrivalAirport : 'Destination';
+    if (lastSeg) {
+      if (lastSeg.arrivalAirport && lastSeg.arrivalAirport !== lastSeg.arrival.iataCode) {
+        return `${lastSeg.arrivalAirport} (${lastSeg.arrival.iataCode})`;
+      }
+      return lastSeg.arrival.iataCode;
+    }
+    return 'Destination';
   });
 
   ngOnInit() {
@@ -289,21 +297,17 @@ export class FlightResultsComponent implements OnInit {
 
   private fetchAirlineNames() {
     const codes = this.airlineOptions();
-    console.log('codes', codes);
     if (codes.length === 0) return;
 
     // Filter out codes we already have names for
     const existingNames = this.dynamicAirlineNames();
-    console.log(existingNames)
     const missingCodes = codes.filter(code => !existingNames[code]);
-    console.log('missingCodes', missingCodes);
 
     if (missingCodes.length === 0) return;
 
     // Fetch all missing airline names in a single request using comma-separated codes
     this.airlineService.lookupAirlines(missingCodes.join(',')).subscribe({
       next: (response) => {
-        console.log('response',response)
         if (response.data) {
           this.dynamicAirlineNames.update(names => {
             const updatedNames = { ...names };
@@ -391,28 +395,88 @@ export class FlightResultsComponent implements OnInit {
   /**
    * Selects a flight, calls backend validation endpoint, and handles state serialization safely.
    */
-  selectFlight(flight: FlightOffer) {
+  // selectFlight(flight: FlightOffer) {
+  //   this.loading.set(true);
+  //   this.error.set(null);
+  //
+  //   this.flightService.priceFlight(flight).subscribe({
+  //     next: (response) => {
+  //       // Robust extraction of flight offer from response
+  //       let flightOffer = response.data?.flightOffers?.[0] || response.flightOffer;
+  //
+  //       // If not found in standard properties, check if the response itself is the offer
+  //       // or if it's our hybrid payload echoed back
+  //       if (!flightOffer) {
+  //         if (response.itineraries || response.price) {
+  //           flightOffer = response;
+  //         } else if (response.data?.flightOffers?.[0]) {
+  //           flightOffer = response.data.flightOffers[0];
+  //         }
+  //       }
+  //
+  //       if (flightOffer && (flightOffer.itineraries || flightOffer.price)) {
+  //         this.flightService.setSelectedFlight(flightOffer);
+  //         this.router.navigate(['/validation']);
+  //       } else {
+  //         this.error.set('FLIGHT_RESULTS.ERROR_VALIDATE_FAILED');
+  //       }
+  //       this.loading.set(false);
+  //     },
+  //     error: (err) => {
+  //       console.error('Pricing validation phase dropped:', err);
+  //       this.error.set('FLIGHT_RESULTS.ERROR_PRICING_FAILED');
+  //       this.loading.set(false);
+  //     }
+  //   });
+  // }
+
+  selectFlight(flight: any) {
+    console.log('Flight selected:', flight);
     this.loading.set(true);
     this.error.set(null);
 
+    // ✅ Always available now
+    // const originalFlight = flight.__raw;
+
+    if (!flight) {
+      console.error('❌ No raw flight attached:', flight);
+      this.error.set('FLIGHT_RESULTS.ERROR_VALIDATE_FAILED');
+      this.loading.set(false);
+      return;
+    }
+
     this.flightService.priceFlight(flight).subscribe({
       next: (response) => {
-        // CHANGED: Fallback checks both standard properties & raw variant layers coming from backend pricing calls
-        const flightOffer = response.data?.flightOffers?.[0] || response.flightOffers?.[0] || response;
+        console.log('✅ Pricing response:', response);
+
+        const flightOffer =
+          response?.data?.flightOffers?.[0] ||
+          response?.flightOffers?.[0] ||
+          (response?.itineraries && response?.price ? response : null);
 
         if (flightOffer) {
           this.flightService.setSelectedFlight(flightOffer);
-          this.router.navigate(['/validation']);
+          // Pass traveler counts to validation page
+          const params = this.route.snapshot.params;
+          this.router.navigate(['/validation'], {
+            queryParams: {
+              adults: params['adults'] || 1,
+              children: params['children'] || 0
+            }
+          });
         } else {
           this.error.set('FLIGHT_RESULTS.ERROR_VALIDATE_FAILED');
         }
+
         this.loading.set(false);
       },
       error: (err) => {
-        console.error('Pricing validation phase dropped:', err);
+        console.error(err);
         this.error.set('FLIGHT_RESULTS.ERROR_PRICING_FAILED');
         this.loading.set(false);
       }
     });
   }
+
+
 }

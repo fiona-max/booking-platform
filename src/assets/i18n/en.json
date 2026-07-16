@@ -8,6 +8,10 @@
   "privacy_policy": "Privacy Policy",
   "terms_of_service": "Terms of Service",
   "all_rights_reserved": "All rights reserved.",
+  "SELECT_GENDER": "Select Gender",
+  "MALE": "Male",
+  "FEMALE": "Female",
+  "OTHER": "Other",
   "APP": {
     "TITLE": "Explore the world with PKP-ALLIANCE SOCIETY",
     "SEARCH": "Search Flights",
@@ -160,7 +164,21 @@
     "NAME_ON_PASSPORT": "Name on Passport",
     "ERROR_COMPLETE_DETAILS": "Please complete all details.",
     "ERROR_CONNECTION": "Cannot connect to the booking service. Please check if the backend is running.",
-    "ERROR_CREATE_FAILED": "Failed to create booking. Please try again later."
+    "ERROR_CREATE_FAILED": "Failed to create booking. Please try again later.",
+    "GENDER": "Gender",
+    "SELECT_GENDER": "Select Gender",
+    "MALE": "Male",
+    "FEMALE": "Female",
+    "OTHER": "Other",
+    "COUNTRY": "Country",
+    "SELECT_COUNTRY": "Select Country",
+    "REQUIRED_FIELD": "This field is required.",
+    "INVALID_EMAIL": "Please enter a valid email address.",
+    "INVALID_CARD_NUMBER": "Card number must be 16 digits.",
+    "INVALID_EXPIRY_DATE": "Expiry date must be MM/YY.",
+    "INVALID_CVV": "CVV must be 3 or 4 digits.",
+    "ORIGINAL_PRICE": "Original Price",
+    "EXCHANGE_RATE": "Exchange Rate"
   },
   "FOOTER": {
     "BRAND_DESC": "Redefining luxury travel through technology and passion. Your premium gateway to the world.",

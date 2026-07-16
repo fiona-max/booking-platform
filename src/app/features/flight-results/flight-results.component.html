@@ -18,10 +18,11 @@
     </button>
   </div>
 
-  <div [class.d-none]="!showSearchForm()" class="mb-5 animate-fade-in">
+  @if (showSearchForm()) {
+  <div class="mb-5 animate-fade-in">
     <app-flight-search-form [initialValues]="searchInitialValues"></app-flight-search-form>
   </div>
-
+  }
   <div class="row g-5">
     <aside class="col-12 col-lg-3">
       <div class="card shadow-sm rounded p-4 position-sticky" style="top: 100px;">
@@ -197,7 +198,9 @@
                       <h4 class="h2 fw-bold mb-0">
                         {{ flight.itineraries?.[0]?.segments?.[0]?.departure?.at | date:'HH:mm' }}
                       </h4>
-                      <p class="mb-0 text-muted">{{ flight.itineraries?.[0]?.segments?.[0]?.departure?.iataCode }}</p>
+                      <p class="mb-0 text-muted" [title]="flight.itineraries?.[0]?.segments?.[0]?.departureAirport || ''">
+                        {{ flight.itineraries?.[0]?.segments?.[0]?.departureAirport || flight.itineraries?.[0]?.segments?.[0]?.departure?.iataCode }}
+                      </p>
                     </div>
 
                     <div class="d-flex flex-column align-items-center flex-grow-1 px-4">
@@ -226,8 +229,8 @@
                           <small class="text-muted align-top fs-6">+1</small>
                         }
                       </h4>
-                      <p class="mb-0 text-muted">
-                        {{ flight.itineraries?.[0]?.segments?.[(flight.itineraries?.[0]?.segments?.length || 1) - 1]?.arrival?.iataCode }}
+                      <p class="mb-0 text-muted" [title]="flight.itineraries?.[0]?.segments?.[(flight.itineraries?.[0]?.segments?.length || 1) - 1]?.arrivalAirport || ''">
+                        {{ flight.itineraries?.[0]?.segments?.[(flight.itineraries?.[0]?.segments?.length || 1) - 1]?.arrivalAirport || flight.itineraries?.[0]?.segments?.[(flight.itineraries?.[0]?.segments?.length || 1) - 1]?.arrival?.iataCode }}
                       </p>
                     </div>
                   </div>
@@ -254,9 +257,6 @@
 
                   <button class="btn bg-primary-custom text-secondary-custom px-4 py-2 mt-md-2 text-uppercase fw-bold btn-sm d-flex align-items-center gap-2"
                           (click)="selectFlight(flight)" [disabled]="loading()">
-                    @if (loading()) {
-                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    }
                     SELECT
                   </button>
                 </div>
@@ -404,3 +404,10 @@
     </div>
   </div>
 </main>
+
+@if (loading()) {
+  <app-logo-loader-component
+    [texts]="['Checking price availability...']"
+  >
+  </app-logo-loader-component>
+}
