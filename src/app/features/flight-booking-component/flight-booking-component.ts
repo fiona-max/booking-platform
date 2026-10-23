@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, inject, signal, computed, DestroyRef } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {FlightService} from '../../core/services/flight.service';
 import { LocationService } from '../../core/services/location.service';
@@ -29,6 +29,7 @@ export class FlightBookingComponent implements OnInit {
   private readonly flightService = inject(FlightService);
   private readonly locationService = inject(LocationService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
   userCurrency = computed(() => this.locationService.selectedCurrency());
@@ -206,6 +207,9 @@ export class FlightBookingComponent implements OnInit {
       travelers: travelersPayload
     };
      console.log('Prepared Order Payload for API:', orderPayload);
+    // Persist the order payload for the next step if needed, or pass it via state
+    sessionStorage.setItem('pendingOrder', JSON.stringify(orderPayload));
+    this.router.navigate(['/seatMap']);
     // 3. Make API call to backend endpoint (e.g. /create-order)
     // this.flightService.createOrder(orderPayload)
     //   .pipe(takeUntilDestroyed(this.destroyRef))

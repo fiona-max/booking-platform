@@ -1,0 +1,178 @@
+<div class="container-fluid">
+
+  <!-- Header -->
+  <div class="row bg-white border-bottom py-3 align-items-center">
+    <div class="col">
+      <h4 class="mb-0 text-primary">
+        @if (selectedFlight()?.validatingAirlineCodes) {
+          {{ selectedFlight()?.validatingAirlineCodes[0] }}
+        } @else {
+          AERO
+        }
+      </h4>
+      <small>Seat Selection - {{ selectedFlight()?.itineraries?.[0]?.segments?.[0]?.number || 'AE-402' }}</small>
+    </div>
+
+    <div class="col-auto">
+      <button class="btn btn-link" (click)="confirmSeats()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading()" class="text-center p-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading Seat Map...</span>
+    </div>
+    <p>Retrieving seat map data...</p>
+  </div>
+
+  <div class="row" *ngIf="!isLoading()">
+
+    <!-- Left Sidebar -->
+    <div class="col-lg-2 border-end p-4">
+
+      <h6>Seat Legend</h6>
+
+      <div class="d-flex align-items-center mb-3">
+        <div class="seat available me-2"></div>
+        Available
+      </div>
+
+      <div class="d-flex align-items-center mb-3">
+        <div class="seat selected-seat me-2"></div>
+        Selected
+      </div>
+
+      <div class="d-flex align-items-center mb-3">
+        <div class="seat occupied me-2"></div>
+        Occupied
+      </div>
+
+      <div class="d-flex align-items-center">
+        <div class="seat premium me-2"></div>
+        Premium
+      </div>
+
+    </div>
+
+    <!-- Aircraft Layout -->
+    <div class="col-lg-7 p-4">
+
+      <div class="aircraft-body">
+
+        <ng-container *ngFor="let row of rows">
+
+          <!-- Exit Row -->
+          <div *ngIf="isExitRow(row.rowNumber)"
+               class="text-danger text-center fw-bold my-4">
+            EXIT ROW
+          </div>
+
+          <!-- Seat Row -->
+          <div class="seat-row">
+
+            <div class="row-number">
+              {{ row.rowNumber }}
+            </div>
+
+            <!-- Left Side -->
+            <button
+              *ngFor="let seat of row.seats.slice(0,3)"
+              class="seat-btn"
+              [ngClass]="{
+                  'occupied': seat.occupied,
+                  'premium': seat.premium && !seat.occupied && !seat.selected,
+                  'selected-seat': seat.selected
+              }"
+              (click)="toggleSeat(seat)"
+            >
+              {{ seat.occupied ? 'X' : seat.label }}
+            </button>
+
+            <div class="aisle"></div>
+
+            <!-- Right Side -->
+            <button
+              *ngFor="let seat of row.seats.slice(3,6)"
+              class="seat-btn"
+              [ngClass]="{
+                  'occupied': seat.occupied,
+                  'premium': seat.premium && !seat.occupied && !seat.selected,
+                  'selected-seat': seat.selected
+              }"
+              (click)="toggleSeat(seat)"
+            >
+              {{ seat.occupied ? 'X' : seat.label }}
+            </button>
+
+          </div>
+
+        </ng-container>
+
+      </div>
+
+    </div>
+
+    <!-- Summary Sidebar -->
+    <div class="col-lg-3 border-start p-4 bg-light">
+
+      <h4>Trip Summary</h4>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <small>PASSENGER 1</small>
+          <h6>Johnathan Doe</h6>
+          <span class="badge bg-primary">
+            18A
+          </span>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <small>PASSENGER 2</small>
+          <h6>Elena Doe</h6>
+          <button class="btn btn-link p-0">
+            Select Seat
+          </button>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="d-flex justify-content-between">
+        <span>Extra Legroom</span>
+        <span>$145.00</span>
+      </div>
+
+      <div class="d-flex justify-content-between fw-bold">
+        <span>Total Extra</span>
+        <span>$145.00</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="row border-top bg-white py-3">
+
+    <div class="col">
+      <small>Current Selection</small>
+      <div>1 of 4 seats assigned</div>
+    </div>
+
+    <div class="col-auto">
+      <button class="btn btn-outline-secondary me-2">
+        Clear All
+      </button>
+
+      <button class="btn btn-primary" (click)="confirmSeats()" [disabled]="isLoading()">
+        Confirm Seats & Continue
+      </button>
+    </div>
+
+  </div>
+
+</div>

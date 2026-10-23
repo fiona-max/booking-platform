@@ -1,0 +1,61 @@
+.aircraft-body {
+  max-width: 700px;
+  margin: auto;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.row-number {
+  width: 40px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.aisle {
+  width: 40px;
+}
+
+.seat-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  background: white;
+  transition: 0.2s;
+}
+
+.seat-btn:hover {
+  transform: scale(1.05);
+}
+
+.available {
+  background: #f8f9fa;
+}
+
+.occupied {
+  background: #343a40 !important;
+  color: white;
+  border-color: #343a40;
+}
+
+.selected-seat {
+  background: #0d6efd !important;
+  color: white;
+  border-color: #0d6efd;
+}
+
+.premium {
+  background: #d7ecff !important;
+  border-color: #7ab8ff;
+}
+
+.seat {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+}
